@@ -4,7 +4,10 @@ const lightTheme = createMuiTheme({});
 
 const darkTheme = createMuiTheme({
   palette: {
-    type: 'dark'
+    type: 'dark',
+    primary: {
+      main: '#ffa500'
+    }
   }
 });
 
