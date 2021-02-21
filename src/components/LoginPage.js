@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import axios from '../config/axios';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, TextField, Button } from '@material-ui/core';
 
@@ -24,7 +24,7 @@ const LoginPage = () => {
     const data = new FormData();
     data.append('login_username', username);
     data.append('login_password', password);
-    const response = await axios.post('https://api.mangadex.org/v2/ajax/actions.ajax.php?function=login', data);
+    const response = await axios.post('/ajax/actions.ajax.php?function=login', data);
     console.log(response.body);
   }
 
