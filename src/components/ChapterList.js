@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   Card, CardContent,
   List, ListItem, ListItemText,
-  Select, InputLabel, FormControl
+  Select, InputLabel, FormControl, TextField
 } from '@material-ui/core';
 import moment from 'moment';
 
@@ -21,8 +21,9 @@ const useStyles = makeStyles((theme) => ({
 const ChapterList = ({ chapters }) => {
   const classes = useStyles();
 
-  const [sortBy, setSortBy] = useState('descending');
+  const [sortBy, setSortBy] = useState('ascending');
   const [groupFilter, setGroupFilter] = useState('');
+  const [chapterSkip, setChapterSkip] = useState(NaN);
 
   const chapterGroups = {};
   chapters.forEach((chapter) => {
@@ -37,7 +38,10 @@ const ChapterList = ({ chapters }) => {
     </option>
   ))
 
-  const filteredChapters = chapters.filter((chapter) => !groupFilter || Object.keys(chapter.groups).includes(chapterGroups[groupFilter]));
+  const filteredChapters = chapters.filter((chapter) => (
+    (!groupFilter || Object.keys(chapter.groups).includes(chapterGroups[groupFilter])) &&
+    (isNaN(chapterSkip) || parseInt(chapter.chapter) >= chapterSkip) 
+  ));
   const sortedChapters = filteredChapters.sort((a, b) => {
     if (sortBy === 'descending') {
       return parseInt(b.chapter) - parseInt(a.chapter);
@@ -58,7 +62,7 @@ const ChapterList = ({ chapters }) => {
     <Card elevation={10}>
       <CardContent>
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="sort-by-select">Sort By</InputLabel>
+          <InputLabel htmlFor="sort-by-select">Sort by</InputLabel>
           <Select
             native
             value={sortBy}
@@ -70,7 +74,7 @@ const ChapterList = ({ chapters }) => {
           </Select>
         </FormControl>
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="group-filter-select">Filter by Scanlation Group</InputLabel>
+          <InputLabel htmlFor="group-filter-select">Filter by scanlation group</InputLabel>
           <Select
             native
             value={groupFilter}
@@ -80,6 +84,18 @@ const ChapterList = ({ chapters }) => {
             <option aria-label="None" value="" />
             {groupsDropdownOptions}
           </Select>
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <TextField
+            id="skip-chapters-input"
+            label="Skip chapters before"
+            type="number"
+            value={chapterSkip}
+            onChange={(e) => setChapterSkip(parseInt(e.target.value))}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
         </FormControl>
         <List>
           {chaptersToDisplay}

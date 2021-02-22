@@ -107,6 +107,7 @@ const MangaPage = () => {
           <ChapterList chapters={chapters} />
         </Grid>
         <Grid item xs="auto" sm={1} md={4} />
+        <br />
       </Grid>
     );
   }
