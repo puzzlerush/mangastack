@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
 import axios from '../config/axios';
 
+const htmlDecode = (string) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(string, 'text/html');
+  return doc.documentElement.textContent;
+}
+
 export const useMangaData = (id) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -23,9 +29,16 @@ export const useMangaData = (id) => {
 
     const fetchChaptersData = async () => {
       const response = await axios.get(`/manga/${id}/chapters`);
-      const chapters = response.data.data.chapters;
+      const { chapters, groups } = response.data.data;
       const englishChapters = chapters.filter((chapter) => chapter.language === "gb");
-      setChapters(englishChapters);
+      const groupDictionary = {};
+      groups.forEach((group) => groupDictionary[group.id] = group.name);
+      const modifiedEnglishChapters = englishChapters.map((chapter) => {
+        const groupNames = {};
+        chapter.groups.forEach((groupID) => groupNames[groupID] = htmlDecode(groupDictionary[groupID]));
+        return { ...chapter, groups: groupNames};
+      });
+      setChapters(modifiedEnglishChapters);
     };
 
     const fetchData = async () => {

@@ -44,7 +44,6 @@ const MangaPage = () => {
   const { id } = useParams();
 
   const { isLoading, error, mangaInfo, chapters } = useMangaData(id);
-  console.log(chapters);
   if (isLoading) {
     return <Loader />
   } else if (error) {
