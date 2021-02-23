@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-
 import {
-  Card, CardContent,
+  Card, CardContent, Typography,
   List, ListItem, ListItemText,
-  Select, InputLabel, FormControl, TextField
+  Select, InputLabel, FormControl, TextField,
+  Accordion, AccordionSummary, AccordionDetails
 } from '@material-ui/core';
+import { ExpandMore } from '@material-ui/icons';
 import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
@@ -16,6 +17,12 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
+  selectGroup: {
+    minWidth: 250
+  },
+  list: {
+    width: 700
+  }
 }));
 
 const ChapterList = ({ chapters }) => {
@@ -40,7 +47,7 @@ const ChapterList = ({ chapters }) => {
 
   const filteredChapters = chapters.filter((chapter) => (
     (!groupFilter || Object.keys(chapter.groups).includes(chapterGroups[groupFilter])) &&
-    (isNaN(chapterSkip) || parseInt(chapter.chapter) >= chapterSkip) 
+    (isNaN(chapterSkip) || parseInt(chapter.chapter) >= chapterSkip)
   ));
   const sortedChapters = filteredChapters.sort((a, b) => {
     if (sortBy === 'descending') {
@@ -61,45 +68,58 @@ const ChapterList = ({ chapters }) => {
   return (
     <Card elevation={10}>
       <CardContent>
-        <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="sort-by-select">Sort by</InputLabel>
-          <Select
-            native
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            inputProps={{ name: 'sort', id: 'sort-by-select' }}
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMore />}
+            aria-controls="all-chapters"
+            id="all-chapters"
           >
-            <option value="ascending">Ascending</option>
-            <option value="descending">Descending</option>
-          </Select>
-        </FormControl>
-        <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="group-filter-select">Filter by scanlation group</InputLabel>
-          <Select
-            native
-            value={groupFilter}
-            onChange={(e) => setGroupFilter(e.target.value)}
-            inputProps={{ name: 'group', id: 'group-filter-select' }}
-          >
-            <option aria-label="None" value="" />
-            {groupsDropdownOptions}
-          </Select>
-        </FormControl>
-        <FormControl className={classes.formControl}>
-          <TextField
-            id="skip-chapters-input"
-            label="Skip chapters before"
-            type="number"
-            value={chapterSkip}
-            onChange={(e) => setChapterSkip(parseInt(e.target.value))}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-        </FormControl>
-        <List>
-          {chaptersToDisplay}
-        </List>
+            <Typography variant="subtitle1">See all chapters</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+
+            <List className={classes.list}>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="sort-by-select">Sort by</InputLabel>
+                <Select
+                  native
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  inputProps={{ name: 'sort', id: 'sort-by-select' }}
+                >
+                  <option value="ascending">Ascending</option>
+                  <option value="descending">Descending</option>
+                </Select>
+              </FormControl>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="group-filter-select">Filter by scanlation group</InputLabel>
+                <Select
+                  className={classes.selectGroup}
+                  native
+                  value={groupFilter}
+                  onChange={(e) => setGroupFilter(e.target.value)}
+                  inputProps={{ name: 'group', id: 'group-filter-select' }}
+                >
+                  <option aria-label="None" value="" />
+                  {groupsDropdownOptions}
+                </Select>
+              </FormControl>
+              <FormControl className={classes.formControl}>
+                <TextField
+                  id="skip-chapters-input"
+                  label="Skip chapters before"
+                  type="number"
+                  value={chapterSkip}
+                  onChange={(e) => setChapterSkip(parseInt(e.target.value))}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </FormControl>
+              {chaptersToDisplay}
+            </List>
+          </AccordionDetails>
+        </Accordion>
       </CardContent>
     </Card>
   );
