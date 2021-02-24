@@ -64,15 +64,17 @@ const MangaPage = () => {
         <Grid item xs="auto" sm={1} md={4} />
         <Grid item xs={12} sm={10} md={8}>
           <Card className={classes.root} elevation={10}>
-            <CardMedia
-              className={classes.cover}
-              image={mangaInfo.image_url}
-              title={mangaInfo.title}
-            />
+            {mangaInfo.image_url && (
+              <CardMedia
+                className={classes.cover}
+                image={mangaInfo.image_url}
+                title={mangaInfo.title_english}
+              />
+            )}
             <div className={classes.details}>
               <CardContent className={classes.content}>
                 <Typography variant="h5">{mangaInfo.title}</Typography>
-                <Rating defaultValue={mangaInfo.score/2} precision={0.5} readOnly />
+                <Rating value={mangaInfo.score / 2} precision={0.5} readOnly />
                 <Divider />
                 <br />
                 <Typography variant="subtitle1">{`${chapters.length} chapters`}</Typography>

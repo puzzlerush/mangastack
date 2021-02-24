@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Card, CardContent, Typography,
@@ -25,12 +26,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ChapterList = ({ chapters }) => {
+const ChapterList = ({ chapters, selectedChapter }) => {
   const classes = useStyles();
 
   const [sortBy, setSortBy] = useState('ascending');
   const [groupFilter, setGroupFilter] = useState('');
-  const [chapterSkip, setChapterSkip] = useState(NaN);
+  const [chapterSkip, setChapterSkip] = useState('');
 
   const chapterGroups = {};
   chapters.forEach((chapter) => {
@@ -40,7 +41,7 @@ const ChapterList = ({ chapters }) => {
   });
 
   const groupsDropdownOptions = Object.keys(chapterGroups).map((groupName) => (
-    <option value={groupName}>
+    <option key={groupName} value={groupName}>
       {groupName}
     </option>
   ))
@@ -49,15 +50,23 @@ const ChapterList = ({ chapters }) => {
     (!groupFilter || Object.keys(chapter.groups).includes(chapterGroups[groupFilter])) &&
     (isNaN(chapterSkip) || parseInt(chapter.chapter) >= chapterSkip)
   ));
+
   const sortedChapters = filteredChapters.sort((a, b) => {
     if (sortBy === 'descending') {
       return parseInt(b.chapter) - parseInt(a.chapter);
     } else {
       return parseInt(a.chapter) - parseInt(b.chapter);
     }
-  })
+  });
+
+  let history = useHistory();
   const chaptersToDisplay = sortedChapters.map((chapter) => (
-    <ListItem key={chapter.hash} button>
+    <ListItem 
+      key={chapter.hash}
+      button
+      selected={selectedChapter === chapter.chapter}
+      onClick={() => history.push(`/manga/${chapter.mangaId}/chapter/${chapter.chapter}`)}
+    >
       <ListItemText
         primary={`Chapter ${chapter.chapter} ${chapter.title && ` - ${chapter.title}`}`}
         secondary={moment(chapter.timestamp * 1000).format('LL')}
@@ -110,7 +119,7 @@ const ChapterList = ({ chapters }) => {
                   label="Skip chapters before"
                   type="number"
                   value={chapterSkip}
-                  onChange={(e) => setChapterSkip(parseInt(e.target.value))}
+                  onChange={(e) => setChapterSkip(parseInt(e.target.value) || '')}
                   InputLabelProps={{
                     shrink: true,
                   }}
