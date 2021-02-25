@@ -45,7 +45,7 @@ const MangaPage = () => {
 
   const { isLoading, error, mangaInfo, chapters } = useMangaData(id);
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   } else if (error) {
     return (
       <Alert severity="error">
@@ -68,7 +68,7 @@ const MangaPage = () => {
               <CardMedia
                 className={classes.cover}
                 image={mangaInfo.image_url}
-                title={mangaInfo.title_english}
+                title={mangaInfo.title}
               />
             )}
             <div className={classes.details}>

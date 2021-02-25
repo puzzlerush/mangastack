@@ -53,9 +53,9 @@ const ChapterList = ({ chapters, selectedChapter }) => {
 
   const sortedChapters = filteredChapters.sort((a, b) => {
     if (sortBy === 'descending') {
-      return parseInt(b.chapter) - parseInt(a.chapter);
+      return parseFloat(b.chapter) - parseFloat(a.chapter);
     } else {
-      return parseInt(a.chapter) - parseInt(b.chapter);
+      return parseFloat(a.chapter) - parseFloat(b.chapter);
     }
   });
 
@@ -64,8 +64,8 @@ const ChapterList = ({ chapters, selectedChapter }) => {
     <ListItem 
       key={chapter.hash}
       button
-      selected={selectedChapter === chapter.chapter}
-      onClick={() => history.push(`/manga/${chapter.mangaId}/chapter/${chapter.chapter}`)}
+      selected={selectedChapter === chapter.id}
+      onClick={() => history.push(`/manga/${chapter.mangaId}/chapter/${chapter.id}`)}
     >
       <ListItemText
         primary={`Chapter ${chapter.chapter} ${chapter.title && ` - ${chapter.title}`}`}

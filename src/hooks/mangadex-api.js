@@ -7,8 +7,20 @@ const htmlDecode = (string) => {
   return doc.documentElement.textContent;
 }
 
+export const getEnglishChaptersWithGroups = (chapters, groups) => {
+  const englishChapters = chapters.filter((chapter) => chapter.language === "gb");
+  const groupDictionary = {};
+  groups.forEach((group) => groupDictionary[group.id] = group.name);
+  const modifiedEnglishChapters = englishChapters.map((chapter) => {
+    const groupNames = {};
+    chapter.groups.forEach((groupID) => groupNames[groupID] = htmlDecode(groupDictionary[groupID]));
+    return { ...chapter, groups: groupNames };
+  });
+  return modifiedEnglishChapters;
+}
+
 export const useMangaData = (id) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mangaInfo, setMangaInfo] = useState({});
   const [chapters, setChapters] = useState([]);
@@ -30,15 +42,7 @@ export const useMangaData = (id) => {
     const fetchChaptersData = async () => {
       const response = await axios.get(`/manga/${id}/chapters`);
       const { chapters, groups } = response.data.data;
-      const englishChapters = chapters.filter((chapter) => chapter.language === "gb");
-      const groupDictionary = {};
-      groups.forEach((group) => groupDictionary[group.id] = group.name);
-      const modifiedEnglishChapters = englishChapters.map((chapter) => {
-        const groupNames = {};
-        chapter.groups.forEach((groupID) => groupNames[groupID] = htmlDecode(groupDictionary[groupID]));
-        return { ...chapter, groups: groupNames};
-      });
-      setChapters(modifiedEnglishChapters);
+      setChapters(getEnglishChaptersWithGroups(chapters, groups));
     };
 
     const fetchData = async () => {

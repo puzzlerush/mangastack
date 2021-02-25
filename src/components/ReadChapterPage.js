@@ -1,91 +1,164 @@
 import { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { Grid, Typography, List, ListItem, Button } from '@material-ui/core';
+import { Alert, AlertTitle } from '@material-ui/lab';
 import ChapterList from './ChapterList';
-import { useMangaData } from '../hooks/mangadex-api';
+import Loader from './Loader';
 import axios from '../config/axios';
+import { getEnglishChaptersWithGroups } from '../hooks/mangadex-api';
 
 const ReadChapterPage = () => {
-  const { id, chapterNumber } = useParams();
-  const { mangaInfo, chapters } = useMangaData(id);
+  const { mangaId, chapterId } = useParams();
 
-  const [title, setTitle] = useState('')
-  const [pages, setPages] = useState([]);
-  const [prevChapter, setPrevChapter] = useState('');
-  const [nextChapter, setNextChapter] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [allChapters, setAllChapters] = useState([]);
+  const [chapterInfo, setChapterInfo] = useState({});
+  const [chapterPages, setChapterPages] = useState([]);
+
   useEffect(() => {
-    const fetchChapter = async () => {
-      if (chapters.length === 0) {
-        return;
-      }
-      const chapterIndex = chapters.findIndex((chapter) => chapter.chapter === chapterNumber);
-      setPrevChapter(chapters[chapterIndex < chapters.length ? chapterIndex + 1 : ''].chapter);
-      setNextChapter(chapters[chapterIndex > 0 ? chapterIndex - 1 : ''].chapter);
-      const { title, hash: chapterHash } = chapters[chapterIndex];
-      setTitle(title);
-      const response = await axios.get(`/chapter/${chapterHash}`);
-      const { pages: pageImages, server } = response.data.data;
-      const pageURLs = pageImages.map((pageImage) => `${server}${chapterHash}/${pageImage}`);
-      setPages(pageURLs);
+    const fetchChapterInfo = async () => {
+      const response = await axios.get(`/manga/${mangaId}/chapters`);
+      const { chapters, groups } = response.data.data;
+      setAllChapters(getEnglishChaptersWithGroups(chapters, groups));
+      const currentChapter = chapters.find((chapter) => chapter.id === parseInt(chapterId));
+      setChapterInfo(currentChapter);
+      return currentChapter.hash;
     };
 
-    fetchChapter();
-  }, [chapters, chapterNumber])
+    const fetchPages = async (hash) => {
+      const response = await axios.get(`/chapter/${hash}`);
+      const { pages, server } = response.data.data;
+      const pageURLs = pages.map((page) => `${server}${hash}/${page}`);
+      setChapterPages(pageURLs);
+    };
 
-  const pagesToDisplay = pages.map((page, index) => (
-    <ListItem key={page}>
-      <img style={{ width: '100%' }} src={page} alt={`Error loading page ${index + 1}`} />
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const chapterHash = await fetchChapterInfo();
+        await fetchPages(chapterHash);
+      } catch (e) {
+        setError(`An error occured while fetching the chapter data.\nPlease make sure the IDs in the URL point to valid resources.`);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [chapterId]);
+
+  const pagesToDisplay = chapterPages.map((chapterPage, index) => (
+    <ListItem key={chapterPage}>
+      <img style={{ width: '100%' }} src={chapterPage} alt={`Error loading page ${index + 1}`} />
     </ListItem>
-
   ));
 
   let history = useHistory();
-  return (
-    <Grid
-      container
-      direction="column"
-      justify="center"
-      alignItems="center"
-    >
-      <Grid item xs="auto" sm={1} md={4} />
-      <Grid item xs={12} sm={10} md={8}>
-        <div style={{ textAlign: 'center' }}>
-          <Typography variant="h4">
-            {mangaInfo.title_english}
-          </Typography>
-          <br />
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ flexGrow: 1 }}
-              onClick={() => history.push(`/manga/${id}/chapter/${prevChapter}`)}
-            >
-              Prev
-            </Button>
-            <Typography variant="h6" style={{ flexGrow: 1 }}>
+
+  if (isLoading) {
+    return <Loader />
+  } else if (error) {
+    return (
+      <Alert severity="error">
+        <AlertTitle>Error</AlertTitle>
+        {error}
+      </Alert>
+    );
+  } else {
+    const { id: chapterId, mangaTitle, chapter: chapterNumber, title, groups } = chapterInfo;
+    let prevChapter, nextChapter, scanlatorNames;
+    if (allChapters) {
+      const chaptersBySameScanlator = allChapters.filter((chapter) => {
+        for (const group of groups) {
+          return chapter.groups[group] !== undefined;
+        }
+      });
+      const index = chaptersBySameScanlator.findIndex((chapter) => chapter.id === chapterId);
+      prevChapter = chaptersBySameScanlator[index + 1];
+      nextChapter = chaptersBySameScanlator[index - 1];
+
+      const currentChapterFoundInList = allChapters.find((chapter) => chapter.id === chapterId);
+      scanlatorNames = Object.values(currentChapterFoundInList.groups).join(', ');
+    }
+
+    const renderNavButtons = (topOfPage = true) => (
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: '3em',
+          marginTop: '1em'
+        }}>
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ flexGrow: 1, marginLeft: 5 }}
+          onClick={() => history.push(`/manga/${mangaId}/chapter/${prevChapter && prevChapter.id}`)}
+          disabled={!prevChapter}
+        >
+          Prev
+        </Button>
+        <span style={{ flexGrow: 1 }} />
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ flexGrow: 1 }}
+          onClick={() => window.scrollTo({
+            top: topOfPage ? document.body.scrollHeight : 0,
+            left: 0,
+            behavior: 'smooth'
+          })}
+        >
+          {topOfPage ? 'Scroll to Bottom' : 'Scroll to Top'}
+        </Button>
+        <span style={{ flexGrow: 1 }} />
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ flexGrow: 1, marginRight: 5 }}
+          onClick={() => history.push(`/manga/${mangaId}/chapter/${nextChapter && nextChapter.id}`)}
+          disabled={!nextChapter}
+        >
+          Next
+        </Button>
+      </div>
+    );
+
+    return (
+      <Grid
+        container
+        direction="column"
+        justify="center"
+        alignItems="center"
+      >
+        <Grid item xs="auto" sm={1} md={4} />
+        <Grid item xs={12} sm={10} md={8}>
+          {renderNavButtons()}
+          <div style={{ textAlign: 'center' }}>
+            <Typography variant="h4">
+              {mangaTitle}
+            </Typography>
+            <br />
+            <Typography variant="h6">
               Chapter {chapterNumber} {title && ` - ${title}`}
             </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ flexGrow: 1 }}
-              onClick={() => history.push(`/manga/${id}/chapter/${nextChapter}`)}
-            >
-              Next
-            </Button>
+            {scanlatorNames && (
+              <Typography variant="subtitle1">
+                Scanlated by {scanlatorNames}
+              </Typography>
+            )}
           </div>
-        </div>
-        <List>
-          {pagesToDisplay}
-        </List>
-        <ChapterList chapters={chapters} selectedChapter={chapterNumber} />
-        <br />
+          <List>
+            {pagesToDisplay}
+          </List>
+          <ChapterList chapters={allChapters} selectedChapter={chapterId} />
+          <br />
+          {renderNavButtons(false)}
+        </Grid>
+        <Grid item xs="auto" sm={1} md={4} />
       </Grid>
-      <Grid item xs="auto" sm={1} md={4} />
-    </Grid>
 
-  );
+    );
+  }
 };
 
 export default ReadChapterPage;

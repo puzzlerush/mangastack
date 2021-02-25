@@ -12,7 +12,7 @@ const AppRouter = () => {
         <Route path="/manga/:id" exact>
           <MangaPage />
         </Route>
-        <Route path="/manga/:id/chapter/:chapterNumber">
+        <Route path="/manga/:mangaId/chapter/:chapterId">
           <ReadChapterPage />
         </Route>
         <Route path="/login">
