@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 250
   },
   list: {
-    width: 700
+    width: '100%'
   }
 }));
 
