@@ -27,16 +27,8 @@ export const useMangaData = (id) => {
 
   useEffect(() => {
     const fetchMangaData = async () => {
-      // Get the title of the manga from its id using the MangaDex API
       const response = await axios.get(`/manga/${id}`);
-      const title = response.data.data.title;
-
-      // Use Jikan API to get detailed information about the manga
-      const jikanSearchResponse = await axios.get(`https://api.jikan.moe/v3/search/manga?q=${title}&page=1`);
-      const results = jikanSearchResponse.data.results;
-      const matchingEntry = results[0];
-      const jikanMangaResponse = await axios.get(`https://api.jikan.moe/v3/manga/${matchingEntry.mal_id}`)
-      setMangaInfo(jikanMangaResponse.data);
+      setMangaInfo(response.data.data);
     };
 
     const fetchChaptersData = async () => {

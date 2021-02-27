@@ -64,24 +64,26 @@ const MangaPage = () => {
         <Grid item xs="auto" sm={1} md={4} />
         <Grid item xs={12} sm={10} md={8}>
           <Card className={classes.root} elevation={10}>
-            {mangaInfo.image_url && (
+            {mangaInfo.mainCover && (
               <CardMedia
                 className={classes.cover}
-                image={mangaInfo.image_url}
+                image={mangaInfo.mainCover}
                 title={mangaInfo.title}
               />
             )}
             <div className={classes.details}>
               <CardContent className={classes.content}>
                 <Typography variant="h5">{mangaInfo.title}</Typography>
-                <Rating value={mangaInfo.score / 2} precision={0.5} readOnly />
+                <Rating value={mangaInfo.rating.bayesian / 2} precision={0.5} readOnly />
                 <Divider />
                 <br />
-                <Typography variant="subtitle1">{`${chapters.length} chapters`}</Typography>
+                <Typography variant="subtitle1">{chapters.length} {chapters.length === 1 ? 'chapter' : 'chapters'}</Typography>
                 <br />
                 <Typography variant="subtitle1">
-                  {mangaInfo.publishing ? 'Publishing from ' : 'Published from '}
-                  {mangaInfo.published && mangaInfo.published.string}
+                  {mangaInfo.author && `Written by ${mangaInfo.author.join(', ')}`}
+                </Typography>
+                <Typography variant="subtitle1">
+                  {mangaInfo.artist && `Illustrated by ${mangaInfo.artist.join(', ')}`}
                 </Typography>
                 <br />
                 <Accordion className={classes.accordion}>
@@ -94,7 +96,7 @@ const MangaPage = () => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>
-                      {mangaInfo.synopsis ? mangaInfo.synopsis : 'No synopsis available.'}
+                      {mangaInfo.description ? mangaInfo.description.split(/\[.+?\]/)[0] : 'No synopsis available.'}
                     </Typography>
                   </AccordionDetails>
                 </Accordion>
