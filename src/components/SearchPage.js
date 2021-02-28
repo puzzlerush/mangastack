@@ -95,7 +95,7 @@ const SearchPage = () => {
             </Link>
             <Rating value={result.rating.bayesian / 2} precision={0.5} readOnly />
             <Typography>
-              {result.views} views
+              {result.views.toLocaleString()} views
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
               {getShortAuthors(result.author, result.artist)}

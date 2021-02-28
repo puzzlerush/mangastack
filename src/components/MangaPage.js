@@ -76,7 +76,7 @@ const MangaPage = () => {
                 <Typography variant="h5">{mangaInfo.title}</Typography>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Rating value={mangaInfo.rating.bayesian / 2} precision={0.5} readOnly />
-                  <Typography style={{ display: 'inline' }}>{mangaInfo.views} views</Typography>
+                  <Typography style={{ display: 'inline' }}>{mangaInfo.views.toLocaleString()} views</Typography>
                 </div>
                 <Divider />
                 <br />
