@@ -3,12 +3,16 @@ import LoginPage from '../components/LoginPage';
 import MangaPage from '../components/MangaPage';
 import Header from '../components/Header';
 import ReadChapterPage from '../components/ReadChapterPage';
+import SearchPage from '../components/SearchPage';
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Header />
       <Switch>
+        <Route path="/search">
+          <SearchPage />
+        </Route>
         <Route path="/manga/:id" exact>
           <MangaPage />
         </Route>

@@ -4,7 +4,7 @@ import {
   CardMedia, Typography, Divider,
   Accordion, AccordionSummary, AccordionDetails
 } from '@material-ui/core';
-import { ExpandMore } from '@material-ui/icons';
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { Alert, AlertTitle, Rating } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import Loader from './Loader'
@@ -88,7 +88,7 @@ const MangaPage = () => {
                 <br />
                 <Accordion className={classes.accordion}>
                   <AccordionSummary
-                    expandIcon={<ExpandMore />}
+                    expandIcon={<ExpandMoreIcon />}
                     aria-controls="synopsis-content"
                     id="synopsis-header"
                   >

@@ -7,7 +7,7 @@ import {
   Select, InputLabel, FormControl, TextField,
   Accordion, AccordionSummary, AccordionDetails
 } from '@material-ui/core';
-import { ExpandMore } from '@material-ui/icons';
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
@@ -79,7 +79,7 @@ const ChapterList = ({ chapters, selectedChapter }) => {
       <CardContent>
         <Accordion>
           <AccordionSummary
-            expandIcon={<ExpandMore />}
+            expandIcon={<ExpandMoreIcon />}
             aria-controls="all-chapters"
             id="all-chapters"
           >
