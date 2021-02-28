@@ -74,7 +74,10 @@ const MangaPage = () => {
             <div className={classes.details}>
               <CardContent className={classes.content}>
                 <Typography variant="h5">{mangaInfo.title}</Typography>
-                <Rating value={mangaInfo.rating.bayesian / 2} precision={0.5} readOnly />
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Rating value={mangaInfo.rating.bayesian / 2} precision={0.5} readOnly />
+                  <Typography style={{ display: 'inline' }}>{mangaInfo.views} views</Typography>
+                </div>
                 <Divider />
                 <br />
                 <Typography variant="subtitle1">{chapters.length} {chapters.length === 1 ? 'chapter' : 'chapters'}</Typography>
