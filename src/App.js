@@ -7,7 +7,7 @@ function App({ theme }) {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Paper style={{ minHeight: '100vh' }}>
+        <Paper elevation={0} style={{ minHeight: '100vh' }}>
           <AppRouter />
         </Paper>
       </ThemeProvider>
