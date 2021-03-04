@@ -1,11 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from '../config/axios';
-
-const htmlDecode = (string) => {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(string, 'text/html');
-  return doc.documentElement.textContent;
-}
+import { htmlDecode } from '../utils/utils';
 
 export const getEnglishChaptersWithGroups = (chapters, groups) => {
   const englishChapters = chapters.filter((chapter) => chapter.language === "gb");

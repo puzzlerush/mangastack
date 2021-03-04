@@ -3,6 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import { Grid, Typography, List, ListItem, Button } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import ChapterList from './ChapterList';
+import PageNavigation from './PageNavigation';
 import Loader from './Loader';
 import axios from '../config/axios';
 import { getEnglishChaptersWithGroups } from '../hooks/mangadex-api';
@@ -80,49 +81,6 @@ const ReadChapterPage = () => {
       scanlatorNames = Object.values(currentChapterFoundInList.groups).join(', ');
     }
 
-    const renderNavButtons = (topOfPage = true) => (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          marginBottom: '3em',
-          marginTop: '1em'
-        }}>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ flexGrow: 1, marginLeft: 5 }}
-          onClick={() => history.push(`/manga/${mangaId}/chapter/${prevChapter && prevChapter.id}`)}
-          disabled={!prevChapter}
-        >
-          Prev
-        </Button>
-        <span style={{ flexGrow: 1 }} />
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ flexGrow: 1 }}
-          onClick={() => window.scrollTo({
-            top: topOfPage ? document.body.scrollHeight : 0,
-            left: 0,
-            behavior: 'smooth'
-          })}
-        >
-          {topOfPage ? 'Scroll to Bottom' : 'Scroll to Top'}
-        </Button>
-        <span style={{ flexGrow: 1 }} />
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ flexGrow: 1, marginRight: 5 }}
-          onClick={() => history.push(`/manga/${mangaId}/chapter/${nextChapter && nextChapter.id}`)}
-          disabled={!nextChapter}
-        >
-          Next
-        </Button>
-      </div>
-    );
-
     return (
       <Grid
         container
@@ -132,7 +90,13 @@ const ReadChapterPage = () => {
       >
         <Grid item xs="auto" sm={1} md={4} />
         <Grid item xs={12} sm={10} md={8}>
-          {renderNavButtons()}
+          <PageNavigation 
+            history={history} 
+            prevLink={`/manga/${mangaId}/chapter/${prevChapter && prevChapter.id}`}
+            nextLink={`/manga/${mangaId}/chapter/${nextChapter && nextChapter.id}`}
+            disablePrev={!prevChapter}
+            disableNext={!nextChapter} 
+          />
           <div style={{ textAlign: 'center' }}>
             <Typography variant="h4">
               {mangaTitle}
@@ -152,7 +116,14 @@ const ReadChapterPage = () => {
           </List>
           <ChapterList chapters={allChapters} selectedChapter={chapterId} />
           <br />
-          {renderNavButtons(false)}
+          <PageNavigation 
+            history={history}
+            topOfPage={false}
+            prevLink={`/manga/${mangaId}/chapter/${prevChapter && prevChapter.id}`}
+            nextLink={`/manga/${mangaId}/chapter/${nextChapter && nextChapter.id}`}
+            disablePrev={!prevChapter}
+            disableNext={!nextChapter} 
+          />
         </Grid>
         <Grid item xs="auto" sm={1} md={4} />
       </Grid>

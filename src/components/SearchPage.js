@@ -10,7 +10,6 @@ import axios from '../config/axios';
 
 const getShortDescription = (description) => {
   const cutoff = 150;
-  // const split = description.split(/\[.+?\]/)[0];
   const split = description.replace(/\[.*?\]/g, '');
   if (split.length <= cutoff) {
     return split;
@@ -56,14 +55,18 @@ const useStyles = makeStyles((theme) => ({
 const SearchPage = () => {
   const classes = useStyles();
   const [results, setResults] = useState([]);
+  const [count, setCount] = useState(0);
+  const [limit, setLimit] = useState(12);
+  const [skip, setSkip] = useState(0);
   const query = new URLSearchParams(useLocation().search);
   const searchQuery = query.get('q')
   useEffect(() => {
     const searchManga = async () => {
       const response = await axios.get('http://localhost:5000/manga/search', {
-        params: { q: searchQuery }
+        params: { q: searchQuery, limit, skip }
       });
-      setResults(response.data);
+      setResults(response.data.results);
+      setCount(response.data.count);
 
     };
     searchManga();
@@ -85,7 +88,7 @@ const SearchPage = () => {
         </CardActionArea>
         <div className={classes.details}>
           <CardContent className={classes.content}>
-            <Link 
+            <Link
               to={`/manga/${result.id}`}
               style={{ color: 'inherit', textDecoration: 'none' }}
             >
@@ -113,14 +116,22 @@ const SearchPage = () => {
     <>
       {results.length > 0 ? (
         <Box m={2}>
+          <div
+            style={{
+              textAlign: 'center',
+              marginBottom: 20,
+            }}
+          >
+            <Typography variant="body1">
+              {`Showing ${results.length} out of ${count} results`}
+            </Typography>
+          </div>
           <Grid
             container
             spacing={2}
             m={2}
           >
-            {/* <Grid item xs="auto" sm={1} md={4} /> */}
             {resultsToDisplay}
-            {/* <Grid item xs="auto" sm={1} md={4} /> */}
           </Grid>
         </Box>
       ) : (
