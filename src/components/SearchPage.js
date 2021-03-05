@@ -7,6 +7,7 @@ import {
 import { Rating } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import PageNavigation from './PageNavigation';
+import Loader from './Loader';
 import axios from '../config/axios';
 import { htmlDecode } from '../utils/utils';
 
@@ -56,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SearchPage = () => {
   const classes = useStyles();
+  const [isLoading, setIsLoading] = useState(true);
   const [results, setResults] = useState([]);
   const [count, setCount] = useState(0);
   const query = new URLSearchParams(useLocation().search);
@@ -64,12 +66,12 @@ const SearchPage = () => {
   const perPage = 12
   useEffect(() => {
     const searchManga = async () => {
-      const response = await axios.get('http://localhost:5000/manga/search', {
+      const response = await axios.get('https://mangadb-search.herokuapp.com/manga/search', {
         params: { q: searchQuery, limit: perPage, skip: (page - 1) * perPage }
       });
       setResults(response.data.results);
       setCount(response.data.count);
-
+      setIsLoading(false);
     };
     searchManga();
   }, [searchQuery, page]);
@@ -115,52 +117,56 @@ const SearchPage = () => {
   ))
 
   let history = useHistory();
-  return (
-    <>
-      {results.length > 0 ? (
-        <Box m={2}>
-          <PageNavigation
-            history={history}
-            prevLink={`/search?q=${searchQuery}&page=${page - 1}`}
-            nextLink={`/search?q=${searchQuery}&page=${page + 1}`}
-            disablePrev={page <= 1}
-            disableNext={page >= Math.ceil(count / perPage)}
-          />
-          <div
-            style={{
-              textAlign: 'center',
-              marginBottom: 20,
-            }}
-          >
-            <Typography variant="body1">
-              {`Page ${page} of ${count} results`}
-            </Typography>
-          </div>
-          <Grid
-            container
-            spacing={2}
-            m={2}
-          >
-            {resultsToDisplay}
-          </Grid>
-          <div style={{ margin: '60px 0 80px 0' }}>
+  if (isLoading) {
+    return <Loader />;
+  } else {
+    return (
+      <>
+        {results.length > 0 ? (
+          <Box m={2}>
             <PageNavigation
               history={history}
-              topOfPage={false}
               prevLink={`/search?q=${searchQuery}&page=${page - 1}`}
               nextLink={`/search?q=${searchQuery}&page=${page + 1}`}
               disablePrev={page <= 1}
               disableNext={page >= Math.ceil(count / perPage)}
             />
-          </div>
-        </Box>
-      ) : (
-          <div style={{ textAlign: 'center' }}>
-            {searchQuery ? 'There are no results for the search.' : 'No query, no results.'}
-          </div>
-        )}
-    </>
-  );
+            <div
+              style={{
+                textAlign: 'center',
+                marginBottom: 20,
+              }}
+            >
+              <Typography variant="body1">
+                {`Page ${page} of ${count} results`}
+              </Typography>
+            </div>
+            <Grid
+              container
+              spacing={2}
+              m={2}
+            >
+              {resultsToDisplay}
+            </Grid>
+            <div style={{ margin: '60px 0 80px 0' }}>
+              <PageNavigation
+                history={history}
+                topOfPage={false}
+                prevLink={`/search?q=${searchQuery}&page=${page - 1}`}
+                nextLink={`/search?q=${searchQuery}&page=${page + 1}`}
+                disablePrev={page <= 1}
+                disableNext={page >= Math.ceil(count / perPage)}
+              />
+            </div>
+          </Box>
+        ) : (
+            <div style={{ textAlign: 'center' }}>
+              {searchQuery ? 'There are no results for the search.' : 'No query, no results.'}
+            </div>
+          )}
+      </>
+    );
+  }
 };
 
 export default SearchPage;
