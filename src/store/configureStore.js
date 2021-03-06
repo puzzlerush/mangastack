@@ -27,14 +27,11 @@ const configureStore = () => {
     settings: settingsReducer
   });
 
-  console.log(persistedState);
   const store = createStore(
     rootReducer,
     persistedState,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );
-
-  console.log(store.getState())
 
   store.subscribe(() => {
     saveState(store.getState());

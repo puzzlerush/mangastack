@@ -4,7 +4,7 @@ import { useLocation, useHistory, Link } from 'react-router-dom';
 import {
   Grid, Typography, Box,
   Card, CardContent, CardMedia, CardActionArea,
-  Checkbox, FormControlLabel
+  Checkbox, FormControlLabel, Select
 } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
@@ -75,9 +75,10 @@ const SearchPage = ({ nsfw, setNSFW }) => {
   const [results, setResults] = useState([]);
   const [count, setCount] = useState(0);
   const query = new URLSearchParams(useLocation().search);
-  const searchQuery = query.get('q')
-  const page = parseInt(query.get('page')) || 1
-  const perPage = 12
+  const searchQuery = query.get('q');
+  const page = parseInt(query.get('page')) || 1;
+  const perPage = 12;
+  const totalPages = Math.ceil(count / perPage);
   useEffect(() => {
     const searchManga = async () => {
       setIsLoading(true);
@@ -142,20 +143,50 @@ const SearchPage = ({ nsfw, setNSFW }) => {
   if (isLoading) {
     return <Loader />;
   } else {
+    const pageNavURL = `/search?q=${searchQuery}&page=`;
+    const pageNavOptions = Object.keys([...Array(totalPages)])
+      .map((key) => parseInt(key) + 1)
+      .map((pageNum) => (
+        <option
+          key={`page-${pageNum}`}
+          value={pageNum}
+        >
+          {pageNum}
+        </option>
+      ))
     return (
       <>
         {results.length > 0 ? (
-          <Box m={2}>
+          <Box p={2}>
             <PageNavigation
               history={history}
-              prevLink={`/search?q=${searchQuery}&page=${page - 1}`}
-              nextLink={`/search?q=${searchQuery}&page=${page + 1}`}
+              prevLink={`${pageNavURL}${page - 1}`}
+              nextLink={`${pageNavURL}${page + 1}`}
               disablePrev={page <= 1}
-              disableNext={page >= Math.ceil(count / perPage)}
+              disableNext={page >= totalPages}
             />
             <div className={classes.searchInfo}>
-              <Typography variant="body1" style={{ flexGrow: 1 }}>
-                {`Page ${page} of ${count} results`}
+              <Typography
+                component="span"
+                variant="body1"
+                style={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                {`Page `}
+                <Select
+                  style={{
+                    margin: '0 10px'
+                  }}
+                  native
+                  value={page}
+                  onChange={(e) => history.push(`${pageNavURL}${e.target.value}`)}
+                >
+                  {pageNavOptions}
+                </Select>
+                {` of ${totalPages}`}
               </Typography>
               <FormControlLabel
                 control={
@@ -179,10 +210,10 @@ const SearchPage = ({ nsfw, setNSFW }) => {
               <PageNavigation
                 history={history}
                 topOfPage={false}
-                prevLink={`/search?q=${searchQuery}&page=${page - 1}`}
-                nextLink={`/search?q=${searchQuery}&page=${page + 1}`}
+                prevLink={`${pageNavURL}${page - 1}`}
+                nextLink={`${pageNavURL}${page + 1}`}
                 disablePrev={page <= 1}
-                disableNext={page >= Math.ceil(count / perPage)}
+                disableNext={page >= totalPages}
               />
             </div>
           </Box>
