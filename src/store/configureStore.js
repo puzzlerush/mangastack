@@ -1,9 +1,9 @@
 import { createStore, combineReducers } from 'redux';
-import themeReducer from '../reducers/theme';
+import settingsReducer from '../reducers/settings';
 
 const configureStore = () => {
   const rootReducer = combineReducers({
-    theme: themeReducer
+    settings: settingsReducer
   });
   const store = createStore(
     rootReducer,

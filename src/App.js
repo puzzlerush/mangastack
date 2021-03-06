@@ -16,7 +16,7 @@ function App({ theme }) {
 }
 
 const mapStateToProps = (state) => ({
-  theme: state.theme
+  theme: state.settings.theme
 });
 
 export default connect(mapStateToProps)(App);

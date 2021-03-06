@@ -9,7 +9,7 @@ import {
 import { Search as SearchIcon } from '@material-ui/icons';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import themes from '../themes/themes';
-import { setTheme } from '../actions/theme';
+import { setTheme } from '../actions/settings';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
       marginRight: theme.spacing(0),
       flexGrow: 1
     }
-    // width: 'auto'
   },
   searchIcon: {
     height: '100%',
@@ -118,7 +117,7 @@ const Header = ({ theme, setTheme }) => {
 };
 
 const mapStateToProps = (state) => ({
-  theme: state.theme
+  theme: state.settings.theme
 });
 
 const mapDispatchToProps = (dispatch) => ({

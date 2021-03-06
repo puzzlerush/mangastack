@@ -66,6 +66,7 @@ const SearchPage = () => {
   const perPage = 12
   useEffect(() => {
     const searchManga = async () => {
+      setIsLoading(true);
       const response = await axios.get('https://mangadb-search.herokuapp.com/manga/search', {
         params: { q: searchQuery, limit: perPage, skip: (page - 1) * perPage }
       });
