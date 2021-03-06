@@ -8,7 +8,6 @@ import {
 } from '@material-ui/core';
 import { Search as SearchIcon } from '@material-ui/icons';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import themes from '../themes/themes';
 import { setTheme } from '../actions/settings';
 
 const useStyles = makeStyles((theme) => ({
@@ -107,8 +106,8 @@ const Header = ({ theme, setTheme }) => {
             </form>
           </div>
           <Switch
-            checked={Object.is(theme, themes.darkTheme)}
-            onChange={() => Object.is(theme, themes.lightTheme) ? setTheme(themes.darkTheme) : setTheme(themes.lightTheme)}
+            checked={theme === 'dark'}
+            onChange={() => theme === 'light' ? setTheme('dark') : setTheme('light')}
           />
         </Toolbar>
       </AppBar>

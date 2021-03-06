@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { useLocation, useHistory, Link } from 'react-router-dom';
 import {
   Grid, Typography, Box,
-  Card, CardContent, CardMedia, CardActionArea
+  Card, CardContent, CardMedia, CardActionArea,
+  Checkbox, FormControlLabel
 } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,6 +12,7 @@ import PageNavigation from './PageNavigation';
 import Loader from './Loader';
 import axios from '../config/axios';
 import { htmlDecode } from '../utils/utils';
+import { setNSFW } from '../actions/settings';
 
 const getShortDescription = (description) => {
   const cutoff = 150;
@@ -37,6 +40,15 @@ const useStyles = makeStyles((theme) => ({
     height: 300,
     width: '100%'
   },
+  searchInfo: {
+    display: 'flex',
+    flexDirection: 'row',
+    [theme.breakpoints.only('xs')]: {
+      flexDirection: 'column'
+    },
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   details: {
     display: 'flex',
     flexDirection: 'column',
@@ -55,7 +67,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const SearchPage = () => {
+const mangadbURL = process.env.REACT_APP_MANGADB_SEARCH_URL
+
+const SearchPage = ({ nsfw, setNSFW }) => {
   const classes = useStyles();
   const [isLoading, setIsLoading] = useState(true);
   const [results, setResults] = useState([]);
@@ -67,15 +81,22 @@ const SearchPage = () => {
   useEffect(() => {
     const searchManga = async () => {
       setIsLoading(true);
-      const response = await axios.get('https://mangadb-search.herokuapp.com/manga/search', {
-        params: { q: searchQuery, limit: perPage, skip: (page - 1) * perPage }
-      });
-      setResults(response.data.results);
-      setCount(response.data.count);
+      try {
+        const response = await axios.get(`${mangadbURL}/manga/search`, {
+          params: {
+            q: searchQuery,
+            nsfw,
+            limit: perPage,
+            skip: (page - 1) * perPage
+          }
+        });
+        setResults(response.data.results);
+        setCount(response.data.count);
+      } catch (e) { }
       setIsLoading(false);
     };
     searchManga();
-  }, [searchQuery, page]);
+  }, [searchQuery, nsfw, page]);
 
   const resultsToDisplay = results.map((result) => (
     <Grid key={result.id} item xs={12} sm={6} lg={4} xl={3}>
@@ -132,15 +153,20 @@ const SearchPage = () => {
               disablePrev={page <= 1}
               disableNext={page >= Math.ceil(count / perPage)}
             />
-            <div
-              style={{
-                textAlign: 'center',
-                marginBottom: 20,
-              }}
-            >
-              <Typography variant="body1">
+            <div className={classes.searchInfo}>
+              <Typography variant="body1" style={{ flexGrow: 1 }}>
                 {`Page ${page} of ${count} results`}
               </Typography>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={nsfw}
+                    onChange={() => setNSFW(!nsfw)}
+                    name="include-nsfw-checkbox"
+                  />
+                }
+                label="Include NSFW results"
+              />
             </div>
             <Grid
               container
@@ -170,4 +196,12 @@ const SearchPage = () => {
   }
 };
 
-export default SearchPage;
+const mapStateToProps = (state) => ({
+  nsfw: state.settings.nsfw
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setNSFW: (nsfw) => dispatch(setNSFW(nsfw))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchPage);

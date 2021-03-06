@@ -11,9 +11,13 @@ const darkTheme = createMuiTheme({
   }
 });
 
-const themes = {
-  lightTheme,
-  darkTheme
+export default (themeName) => {
+  switch (themeName) {
+    case 'light':
+      return lightTheme;
+    case 'dark':
+      return darkTheme;
+    default:
+      return lightTheme;
+  }
 };
-
-export default themes;

@@ -1,17 +1,17 @@
-import themes from '../themes/themes';
-
 const defaultSettingsState = {
-  theme: themes.lightTheme,
-  showNSFW: false
+  theme: 'light',
+  nsfw: false
 }; 
 
-const themeReducer = (state = defaultSettingsState, action) => {
+const settingsReducer = (state = defaultSettingsState, action) => {
   switch (action.type) {
     case 'SET_THEME':
       return { ...state, theme: action.theme };
+    case 'SET_NSFW':
+      return { ...state, nsfw: action.nsfw };
     default:
-      return defaultSettingsState;
+      return state;
   }
 };
 
-export default themeReducer;
+export default settingsReducer;
