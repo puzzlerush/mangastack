@@ -159,7 +159,6 @@ const SearchPage = ({ nsfw, setNSFW }) => {
         {results.length > 0 ? (
           <Box p={2}>
             <PageNavigation
-              history={history}
               prevLink={`${pageNavURL}${page - 1}`}
               nextLink={`${pageNavURL}${page + 1}`}
               disablePrev={page <= 1}
@@ -208,7 +207,6 @@ const SearchPage = ({ nsfw, setNSFW }) => {
             </Grid>
             <div style={{ margin: '60px 0 80px 0' }}>
               <PageNavigation
-                history={history}
                 topOfPage={false}
                 prevLink={`${pageNavURL}${page - 1}`}
                 nextLink={`${pageNavURL}${page + 1}`}

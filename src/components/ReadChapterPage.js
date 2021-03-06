@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
-import { Grid, Typography, List, ListItem, Button } from '@material-ui/core';
+import { useParams } from 'react-router-dom';
+import { Grid, Typography, List, ListItem } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import ChapterList from './ChapterList';
 import PageNavigation from './PageNavigation';
@@ -53,8 +53,6 @@ const ReadChapterPage = () => {
     </ListItem>
   ));
 
-  let history = useHistory();
-
   if (isLoading) {
     return <Loader />
   } else if (error) {
@@ -81,6 +79,7 @@ const ReadChapterPage = () => {
       scanlatorNames = Object.values(currentChapterFoundInList.groups).join(', ');
     }
 
+    const chapterBaseURL = `/manga/${mangaId}/chapter/`;
     return (
       <Grid
         container
@@ -91,9 +90,8 @@ const ReadChapterPage = () => {
         <Grid item xs="auto" sm={1} md={4} />
         <Grid item xs={12} sm={10} md={8}>
           <PageNavigation 
-            history={history} 
-            prevLink={`/manga/${mangaId}/chapter/${prevChapter && prevChapter.id}`}
-            nextLink={`/manga/${mangaId}/chapter/${nextChapter && nextChapter.id}`}
+            prevLink={`${chapterBaseURL}${prevChapter && prevChapter.id}`}
+            nextLink={`${chapterBaseURL}${nextChapter && nextChapter.id}`}
             disablePrev={!prevChapter}
             disableNext={!nextChapter} 
           />
@@ -117,10 +115,9 @@ const ReadChapterPage = () => {
           <ChapterList chapters={allChapters} selectedChapter={chapterId} />
           <br />
           <PageNavigation 
-            history={history}
             topOfPage={false}
-            prevLink={`/manga/${mangaId}/chapter/${prevChapter && prevChapter.id}`}
-            nextLink={`/manga/${mangaId}/chapter/${nextChapter && nextChapter.id}`}
+            prevLink={`${chapterBaseURL}${prevChapter && prevChapter.id}`}
+            nextLink={`${chapterBaseURL}${nextChapter && nextChapter.id}`}
             disablePrev={!prevChapter}
             disableNext={!nextChapter} 
           />

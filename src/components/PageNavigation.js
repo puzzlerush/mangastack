@@ -1,7 +1,7 @@
+import { Link } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 
 const PageNavigation = ({ 
-  history, 
   topOfPage = true, 
   prevLink, 
   nextLink,
@@ -19,8 +19,9 @@ const PageNavigation = ({
       variant="contained"
       color="primary"
       style={{ flexGrow: 1, marginLeft: 5 }}
-      onClick={() => history.push(prevLink)}
       disabled={disablePrev}
+      component={Link}
+      to={prevLink}
     >
       Prev
     </Button>
@@ -42,8 +43,9 @@ const PageNavigation = ({
       variant="contained"
       color="primary"
       style={{ flexGrow: 1, marginRight: 5 }}
-      onClick={() => history.push(nextLink)}
       disabled={disableNext}
+      component={Link}
+      to={nextLink}
     >
       Next
     </Button>
