@@ -5,9 +5,9 @@ const mangaListReducer = (state = [], action) => {
       const filteredState = state.filter(
         (progressObj) => progressObj.mangaInfo.id !== mangaInfo.id
       );
-      return [...filteredState, { mangaInfo, chapterInfo }];
+      return [{ mangaInfo, chapterInfo }, ...filteredState];
     case 'DELETE_ITEM':
-      return state.filter(({ mangaInfo, chapterInfo }) => mangaInfo.id !== action.mangaId);
+      return state.filter(({ mangaInfo }) => mangaInfo.id !== action.mangaId);
     default:
       return state;
   }

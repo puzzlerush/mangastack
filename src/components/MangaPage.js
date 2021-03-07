@@ -1,3 +1,4 @@
+import { connect } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 import {
   Grid, Card, CardContent,
@@ -39,12 +40,16 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const MangaPage = () => {
+const MangaPage = ({ userMangaList }) => {
   const classes = useStyles();
 
   const { id } = useParams();
 
   const { isLoading, error, mangaInfo, chapters } = useMangaData(id);
+
+  const userLastReadChapter = userMangaList.find(({ mangaInfo }) => mangaInfo.id === id);
+  const userIsReading = !!userLastReadChapter;
+
   if (isLoading) {
     return <Loader />;
   } else if (error) {
@@ -90,14 +95,25 @@ const MangaPage = () => {
                   {mangaInfo.artist && `Illustrated by ${mangaInfo.artist.join(', ')}`}
                 </Typography>
                 <p style={{ margin: '1em 0' }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    component={Link}
-                    to={`/manga/${id}/chapter/${chapters[chapters.length - 1].id}`}
-                  >
-                    Start reading
+                  {userIsReading ? (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      component={Link}
+                      to={`/manga/${id}/chapter/${userLastReadChapter.id}`}
+                    >
+                      Continue reading
                     </Button>
+                  ) : (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        component={Link}
+                        to={`/manga/${id}/chapter/${chapters[chapters.length - 1].id}`}
+                      >
+                        Start reading
+                      </Button>
+                    )}
                 </p>
                 <Accordion className={classes.accordion}>
                   <AccordionSummary
@@ -130,4 +146,8 @@ const MangaPage = () => {
   }
 };
 
-export default MangaPage;
+const mapStateToProps = (state) => ({
+  userMangaList: state.mangaList
+});
+
+export default connect(mapStateToProps)(MangaPage);

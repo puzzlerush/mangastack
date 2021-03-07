@@ -38,7 +38,7 @@ const CurrentlyReadingPage = ({ mangaList, deleteItem }) => {
         key={mangaInfo.id}
         button
         component={Link}
-        to={`/manga/${mangaInfo.id}/chapter/${chapterInfo.id}`}
+        to={chapterLink}
       >
         <ListItemText
           primary={title}

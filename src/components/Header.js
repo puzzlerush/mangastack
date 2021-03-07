@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import {
   AppBar, Toolbar, Typography,
   Switch, InputBase, Box, Tooltip,
   IconButton
 } from '@material-ui/core';
-import { Search as SearchIcon } from '@material-ui/icons';
+import { Menu as MenuIcon, Search as SearchIcon } from '@material-ui/icons';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { setTheme } from '../actions/settings';
 
@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
     },
     paddingTop: 10,
     paddingBottom: 10
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1
@@ -61,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
 const Header = ({ theme, setTheme }) => {
   const classes = useStyles();
   const [searchInput, setSearchInput] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false); 
   let history = useHistory();
 
   const handleSubmit = (e) => {
@@ -72,12 +76,28 @@ const Header = ({ theme, setTheme }) => {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar className={classes.toolBar}>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            className={classes.menuButton}
+          >
+            <MenuIcon />
+          </IconButton>
           <Box
             component="span"
             display={{ xs: 'none', sm: 'block' }}
             className={classes.title}
           >
-            <Typography variant="h6">
+            <Typography
+              variant="h6"
+              component={Link}
+              to="/"
+              style={{
+                color: 'inherit',
+                textDecoration: 'none'
+              }}
+            >
               Manga Reader
             </Typography>
           </Box>

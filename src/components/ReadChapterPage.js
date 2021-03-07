@@ -25,6 +25,9 @@ const ReadChapterPage = ({ setReading }) => {
       const { chapters, groups } = response.data.data;
       setAllChapters(getEnglishChaptersWithGroups(chapters, groups));
       const currentChapter = chapters.find((chapter) => chapter.id === parseInt(chapterId));
+      if (!currentChapter) {
+        throw new Error();
+      }
       setChapterInfo(currentChapter);
       setReading({ id: mangaId }, currentChapter);
       return currentChapter.hash;
