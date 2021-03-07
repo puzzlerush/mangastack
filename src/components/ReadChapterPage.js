@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Grid, Typography, List, ListItem } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
@@ -7,8 +8,9 @@ import PageNavigation from './PageNavigation';
 import Loader from './Loader';
 import axios from '../config/axios';
 import { getEnglishChaptersWithGroups } from '../hooks/mangadex-api';
+import { setReading } from '../actions/mangaList';
 
-const ReadChapterPage = () => {
+const ReadChapterPage = ({ setReading }) => {
   const { mangaId, chapterId } = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -24,6 +26,7 @@ const ReadChapterPage = () => {
       setAllChapters(getEnglishChaptersWithGroups(chapters, groups));
       const currentChapter = chapters.find((chapter) => chapter.id === parseInt(chapterId));
       setChapterInfo(currentChapter);
+      setReading({ id: mangaId }, currentChapter);
       return currentChapter.hash;
     };
 
@@ -129,4 +132,8 @@ const ReadChapterPage = () => {
   }
 };
 
-export default ReadChapterPage;
+const mapDispatchToProps = (dispatch) => ({
+  setReading: (mangaInfo, chapterInfo) => dispatch(setReading(mangaInfo, chapterInfo))
+});
+
+export default connect(undefined, mapDispatchToProps)(ReadChapterPage);

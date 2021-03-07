@@ -1,5 +1,6 @@
 import { createStore, combineReducers } from 'redux';
 import settingsReducer from '../reducers/settings';
+import mangaListReducer from '../reducers/mangaList';
 
 const loadState = () => {
   try {
@@ -24,7 +25,8 @@ const persistedState = loadState();
 
 const configureStore = () => {
   const rootReducer = combineReducers({
-    settings: settingsReducer
+    settings: settingsReducer,
+    mangaList: mangaListReducer
   });
 
   const store = createStore(

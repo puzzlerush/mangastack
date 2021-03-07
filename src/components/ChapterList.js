@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Card, CardContent, Typography,
@@ -47,25 +47,26 @@ const ChapterList = ({ chapters, selectedChapter }) => {
   ))
 
   const filteredChapters = chapters.filter((chapter) => (
-    (!groupFilter || Object.keys(chapter.groups).includes(chapterGroups[groupFilter])) &&
-    (isNaN(chapterSkip) || parseInt(chapter.chapter) >= chapterSkip)
+    (!groupFilter || Object.keys(chapter.groups).includes(chapterGroups[groupFilter]))
   ));
 
-  const sortedChapters = filteredChapters.sort((a, b) => {
-    if (sortBy === 'descending') {
-      return parseFloat(b.chapter) - parseFloat(a.chapter);
-    } else {
-      return parseFloat(a.chapter) - parseFloat(b.chapter);
-    }
-  });
+  const sortedChapters = [...filteredChapters];
+  if (sortBy === 'ascending') {
+    sortedChapters.reverse();
+  }
 
-  let history = useHistory();
-  const chaptersToDisplay = sortedChapters.map((chapter) => (
-    <ListItem 
+  const noSkippedChapters = sortedChapters.slice(
+    isNaN(chapterSkip) ? 0 : chapterSkip,
+    sortedChapters.length
+  );
+
+  const chaptersToDisplay = noSkippedChapters.map((chapter) => (
+    <ListItem
       key={chapter.hash}
       button
+      component={Link}
+      to={`/manga/${chapter.mangaId}/chapter/${chapter.id}`}
       selected={selectedChapter === chapter.id}
-      onClick={() => history.push(`/manga/${chapter.mangaId}/chapter/${chapter.id}`)}
     >
       <ListItemText
         primary={`Chapter ${chapter.chapter} ${chapter.title && ` - ${chapter.title}`}`}
@@ -115,8 +116,8 @@ const ChapterList = ({ chapters, selectedChapter }) => {
               </FormControl>
               <FormControl className={classes.formControl}>
                 <TextField
-                  id="skip-chapters-input"
-                  label="Skip chapters before"
+                  id="chapters-to-skip-input"
+                  label="Chapters to skip"
                   type="number"
                   value={chapterSkip}
                   onChange={(e) => setChapterSkip(parseInt(e.target.value) || '')}

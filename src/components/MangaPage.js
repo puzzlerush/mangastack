@@ -1,8 +1,9 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
   Grid, Card, CardContent,
   CardMedia, Typography, Divider,
-  Accordion, AccordionSummary, AccordionDetails
+  Accordion, AccordionSummary, AccordionDetails,
+  Button
 } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { Alert, AlertTitle, Rating } from '@material-ui/lab';
@@ -61,7 +62,7 @@ const MangaPage = () => {
         justify="center"
         alignItems="center"
       >
-        <Grid item xs="auto" sm={1} md={4} />
+        <Grid item xs="auto" sm={1} md={2} />
         <Grid item xs={12} sm={10} md={8}>
           <Card className={classes.root} elevation={10}>
             {mangaInfo.mainCover && (
@@ -88,7 +89,16 @@ const MangaPage = () => {
                 <Typography variant="subtitle1">
                   {mangaInfo.artist && `Illustrated by ${mangaInfo.artist.join(', ')}`}
                 </Typography>
-                <br />
+                <p style={{ margin: '1em 0' }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    component={Link}
+                    to={`/manga/${id}/chapter/${chapters[chapters.length - 1].id}`}
+                  >
+                    Start reading
+                    </Button>
+                </p>
                 <Accordion className={classes.accordion}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -108,12 +118,12 @@ const MangaPage = () => {
           </Card>
         </Grid>
         <br />
-        <Grid item xs="auto" sm={1} md={4} />
-        <Grid item xs="auto" sm={1} md={4} />
+        <Grid item xs="auto" sm={1} md={2} />
+        <Grid item xs="auto" sm={1} md={2} />
         <Grid item xs={12} sm={10} md={8}>
           <ChapterList chapters={chapters} />
         </Grid>
-        <Grid item xs="auto" sm={1} md={4} />
+        <Grid item xs="auto" sm={1} md={2} />
         <br />
       </Grid>
     );

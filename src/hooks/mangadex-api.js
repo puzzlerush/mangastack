@@ -23,7 +23,10 @@ export const useMangaData = (id) => {
   useEffect(() => {
     const fetchMangaData = async () => {
       const response = await axios.get(`/manga/${id}`);
-      setMangaInfo(response.data.data);
+      const mangaObj = { ...response.data.data };
+      mangaObj.title = htmlDecode(mangaObj.title);
+      mangaObj.description = htmlDecode(mangaObj.description);
+      setMangaInfo(mangaObj);
     };
 
     const fetchChaptersData = async () => {

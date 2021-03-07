@@ -4,6 +4,7 @@ import MangaPage from '../components/MangaPage';
 import Header from '../components/Header';
 import ReadChapterPage from '../components/ReadChapterPage';
 import SearchPage from '../components/SearchPage';
+import CurrentlyReadingPage from '../components/CurrentlyReadingPage';
 
 const AppRouter = () => {
   return (
@@ -12,6 +13,9 @@ const AppRouter = () => {
       <Switch>
         <Route path="/search">
           <SearchPage />
+        </Route>
+        <Route path="/currently-reading">
+          <CurrentlyReadingPage />
         </Route>
         <Route path="/manga/:id" exact>
           <MangaPage />
