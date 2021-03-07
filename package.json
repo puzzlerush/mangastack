@@ -1,5 +1,4 @@
 {
-  "proxy": "https://api.mangadex.org/v2",
   "name": "manga-reader",
   "version": "0.1.0",
   "private": true,

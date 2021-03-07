@@ -67,8 +67,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const mangadbURL = process.env.REACT_APP_MANGADB_SEARCH_URL
-
 const SearchPage = ({ nsfw, setNSFW }) => {
   const classes = useStyles();
   const [isLoading, setIsLoading] = useState(true);
@@ -83,7 +81,7 @@ const SearchPage = ({ nsfw, setNSFW }) => {
     const searchManga = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(`${mangadbURL}/manga/search`, {
+        const response = await axios.get(`/mangadb/search`, {
           params: {
             q: searchQuery,
             nsfw,

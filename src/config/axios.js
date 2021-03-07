@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const config = {};
+const config = {
+  baseURL: process.env.REACT_APP_BACKEND_URL
+};
 
 const instance = axios.create(config);
 
