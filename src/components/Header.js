@@ -4,11 +4,18 @@ import { useHistory, Link } from 'react-router-dom';
 import {
   AppBar, Toolbar, Typography,
   Switch, InputBase, Box, Tooltip,
-  IconButton
+  IconButton, Drawer, List, ListItem,
+  ListItemIcon, ListItemText, FormControlLabel,
+  Divider, Checkbox
 } from '@material-ui/core';
-import { Menu as MenuIcon, Search as SearchIcon } from '@material-ui/icons';
+import {
+  Menu as MenuIcon,
+  Search as SearchIcon,
+  Home as HomeIcon,
+  Book as BookIcon
+} from '@material-ui/icons';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import { setTheme } from '../actions/settings';
+import { setTheme, setNSFW } from '../actions/settings';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
+  },
+  sidebarList: {
+    width: 250
   },
   title: {
     flexGrow: 1
@@ -61,16 +71,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Header = ({ theme, setTheme }) => {
+const Header = ({ theme, setTheme, nsfw, setNSFW }) => {
   const classes = useStyles();
   const [searchInput, setSearchInput] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(false); 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   let history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     history.push(`/search?q=${encodeURIComponent(searchInput)}`)
   };
+
+  const sidebarItems = [
+    {
+      label: 'Home',
+      path: '/',
+      Icon: HomeIcon
+    },
+    {
+      label: 'Currently Reading',
+      path: '/currently-reading',
+      Icon: BookIcon
+    },
+  ];
+
+  const sidebarItemsToDisplay = sidebarItems.map(({ label, path, Icon }) => (
+    <ListItem key={path} button component={Link} to={path}>
+      <ListItemIcon><Icon /></ListItemIcon>
+      <ListItemText primary={label} />
+    </ListItem>
+  ))
 
   return (
     <div className={classes.root}>
@@ -80,6 +110,7 @@ const Header = ({ theme, setTheme }) => {
             color="inherit"
             aria-label="open drawer"
             edge="start"
+            onClick={() => setSidebarOpen(true)}
             className={classes.menuButton}
           >
             <MenuIcon />
@@ -125,22 +156,61 @@ const Header = ({ theme, setTheme }) => {
               />
             </form>
           </div>
-          <Switch
-            checked={theme === 'dark'}
-            onChange={() => theme === 'light' ? setTheme('dark') : setTheme('light')}
-          />
         </Toolbar>
       </AppBar>
+      <Drawer
+        anchor="left"
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      >
+        <FormControlLabel
+          style={{
+            margin: '20px 0'
+          }}
+          control={
+            <Switch
+              checked={theme === 'dark'}
+              onChange={() => theme === 'light' ? setTheme('dark') : setTheme('light')}
+            />
+          }
+          label="Enable Dark Mode"
+        />
+        <Divider />
+        <List
+          className={classes.sidebarList}
+          onClick={() => setSidebarOpen(false)}
+        >
+          {sidebarItemsToDisplay}
+        </List>
+        <Divider />
+        <Box p={2}>
+          <Typography variant="h6">
+            Settings
+          </Typography>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={nsfw}
+                onChange={() => setNSFW(!nsfw)}
+                name="include-nsfw-checkbox"
+              />
+            }
+            label="Include NSFW results"
+          />
+        </Box>
+      </Drawer>
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-  theme: state.settings.theme
+  theme: state.settings.theme,
+  nsfw: state.settings.nsfw
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setTheme: (theme) => dispatch(setTheme(theme))
+  setTheme: (theme) => dispatch(setTheme(theme)),
+  setNSFW: (nsfw) => dispatch(setNSFW(nsfw))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
