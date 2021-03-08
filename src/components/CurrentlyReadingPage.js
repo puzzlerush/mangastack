@@ -63,9 +63,9 @@ const CurrentlyReadingPage = ({ mangaList, deleteItem }) => {
       alignItems="center"
       className={classes.root}
     >
-      <Grid item xs="auto" sm={1} md={2} />
-      <Grid item xs={12} sm={10} md={8}>
-        <Typography variant="h4" className={classes.title}>
+      <Grid item xs={1} sm={2} md={3} />
+      <Grid item xs={10} sm={8} md={6}>
+        <Typography variant="h4">
           Currently Reading
         </Typography>
         <br />
@@ -79,7 +79,7 @@ const CurrentlyReadingPage = ({ mangaList, deleteItem }) => {
             </Typography>
           )}
       </Grid>
-      <Grid item xs="auto" sm={1} md={2} />
+      <Grid item xs={1} sm={2} md={3} />
     </Grid>
   );
 };
