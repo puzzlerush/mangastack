@@ -1,16 +1,25 @@
 import { useState, useEffect } from 'react';
-import { Typography, Divider } from '@material-ui/core';
+import { Typography, Divider, Grid, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import axios from '../config/axios';
 import Loader from './Loader';
+import MangaTile from './MangaTile';
 
 const useStyles = makeStyles((theme) => ({
+  allcaps: {
+    textTransform: 'uppercase',
+    letterSpacing: '0.2em'
+  },
   siteTitle: {
     fontSize: '3em',
-    fontWeight: 300,
-    textTransform: 'uppercase',
-    letterSpacing: '0.2em',
-    marginBottom: 22
+    fontWeight: 300
+  },
+  subtitle: {
+    margin: '15px 0'
+  },
+  divider: {
+    margin: '22px 0'
   }
 }));
 
@@ -37,15 +46,50 @@ const HomePage = () => {
     fetchPopularManga();
   }, []);
 
+  const popularMangaToDisplay = popularManga.map((manga) => {
+    const { id } = manga;
+    return (
+      <Grid key={id} item xs={12} sm={6} lg={4} xl={3}>
+        <MangaTile {...manga} />
+      </Grid>
+    );
+  });
+
   if (isLoading) {
     return <Loader />;
   } else {
     return (
-      <div style={{ textAlign: 'center' }}>
-        <Typography className={classes.siteTitle} variant="h1">
+      <div>
+        <Typography 
+          className={clsx(classes.siteTitle, classes.allcaps)} 
+          variant="h1" 
+          align="center"
+        >
           Manga Stack
         </Typography>
-        <Divider />
+        <Typography 
+          className={clsx(classes.subtitle, classes.allcaps)} 
+          variant="subtitle1" 
+          align="center"
+        >
+          Read over 50,000 manga, webtoons, and comics for free!
+        </Typography>
+        <Divider className={classes.divider} />
+        <Box p={2}>
+          <Typography 
+            className={clsx(classes.subtitle, classes.allcaps)}
+            variant="h5">
+            Most Popular Manga
+          </Typography>
+          <Grid
+            container
+            spacing={2}
+            m={2}
+          >
+            {popularMangaToDisplay}
+          </Grid>
+        </Box>
+
       </div>
     );
   }
