@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import { Typography } from '@material-ui/core';
 import Loader from './Loader';
 import MangaGrid from './MangaGrid';
 import axios from '../config/axios';
@@ -38,10 +39,12 @@ const SearchPage = ({ nsfw }) => {
     return <Loader />;
   } else {
     return (
-      <div style={{ textAlign: 'center' }}>
+      <div>
         {results.length > 0 ? (
           <>
-            {`Showing search results for "${searchQuery}"`}
+            <Typography align="center">
+              {`Showing search results for "${searchQuery}"`}
+            </Typography>
             <MangaGrid
               pageNavURL={`/search?q=${searchQuery}&page=`}
               page={page}

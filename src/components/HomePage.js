@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Typography, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from '../config/axios';
+import Loader from './Loader';
 
 const useStyles = makeStyles((theme) => ({
   siteTitle: {
@@ -16,10 +17,12 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   const classes = useStyles();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [popularManga, setPopularManga] = useState([]);
 
   useEffect(() => {
     const fetchPopularManga = async () => {
+      setIsLoading(true);
       const response = await axios.get('/mangadb', {
         params: {
           sortby: 'views',
@@ -29,18 +32,23 @@ const HomePage = () => {
         }
       });
       setPopularManga(response.data);
+      setIsLoading(false);
     };
     fetchPopularManga();
-  });
+  }, []);
 
-  return (
-    <div style={{ textAlign: 'center' }}>
-      <Typography className={classes.siteTitle} variant="h1">
-        Manga Stack
-      </Typography>
-      <Divider />
-    </div>
-  );
+  if (isLoading) {
+    return <Loader />;
+  } else {
+    return (
+      <div style={{ textAlign: 'center' }}>
+        <Typography className={classes.siteTitle} variant="h1">
+          Manga Stack
+        </Typography>
+        <Divider />
+      </div>
+    );
+  }
 };
 
 export default HomePage;
