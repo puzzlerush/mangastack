@@ -5,12 +5,16 @@ import Header from '../components/Header';
 import ReadChapterPage from '../components/ReadChapterPage';
 import SearchPage from '../components/SearchPage';
 import CurrentlyReadingPage from '../components/CurrentlyReadingPage';
+import HomePage from '../components/HomePage';
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Header />
       <Switch>
+        <Route path="/" exact>
+          <HomePage />
+        </Route>
         <Route path="/search">
           <SearchPage />
         </Route>

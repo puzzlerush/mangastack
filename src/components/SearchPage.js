@@ -38,20 +38,19 @@ const SearchPage = ({ nsfw }) => {
     return <Loader />;
   } else {
     return (
-      <>
+      <div style={{ textAlign: 'center' }}>
         {results.length > 0 ? (
-          <MangaGrid
-            pageNavURL={`/search?q=${searchQuery}&page=`}
-            page={page}
-            totalPages={totalPages}
-            mangaList={results}
-          />
-        ) : (
-            <div style={{ textAlign: 'center' }}>
-              {searchQuery ? 'There are no results for the search.' : 'No query, no results.'}
-            </div>
-          )}
-      </>
+          <>
+            {`Showing search results for "${searchQuery}"`}
+            <MangaGrid
+              pageNavURL={`/search?q=${searchQuery}&page=`}
+              page={page}
+              totalPages={totalPages}
+              mangaList={results}
+            />
+          </>
+        ) : searchQuery ? 'There are no results for the search.' : 'No query, no results.'}
+      </div>
     );
   }
 };

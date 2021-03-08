@@ -11,8 +11,7 @@ import PageNavigation from './PageNavigation';
 import { htmlDecode } from '../utils/utils';
 import { setNSFW } from '../actions/settings';
 
-const getShortDescription = (description) => {
-  const cutoff = 150;
+const getShortText = (description, cutoff) => {
   const split = htmlDecode(description).replace(/\[.*?\]/g, '');
   if (split.length <= cutoff) {
     return split;
@@ -90,7 +89,7 @@ const MangaGrid = ({ pageNavURL, page, totalPages, mangaList, nsfw, setNSFW }) =
                 style={{ color: 'inherit', textDecoration: 'none' }}
               >
                 <Typography component="h6" variant="h6">
-                  {htmlDecode(title)}
+                  {getShortText(title, 75)}
                 </Typography>
               </Link>
               <Rating value={rating.bayesian / 2} precision={0.5} readOnly />
@@ -101,7 +100,7 @@ const MangaGrid = ({ pageNavURL, page, totalPages, mangaList, nsfw, setNSFW }) =
                 {getShortAuthors(author, artist)}
               </Typography>
               <Typography variant="body2">
-                {getShortDescription(description) || 'No synopsis available.'}
+                {getShortText(description, 150) || 'No synopsis available.'}
               </Typography>
             </CardContent>
           </div>

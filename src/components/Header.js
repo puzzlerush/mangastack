@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
     [theme.breakpoints.up('sm')]: {
-      width: '20ch',
+      width: '30ch',
     },
     width: '50vw'
   },
@@ -129,7 +129,7 @@ const Header = ({ theme, setTheme, nsfw, setNSFW }) => {
                 textDecoration: 'none'
               }}
             >
-              Manga Reader
+              Manga Stack
             </Typography>
           </Box>
           <div className={classes.search}>
@@ -145,7 +145,7 @@ const Header = ({ theme, setTheme, nsfw, setNSFW }) => {
                 </IconButton>
               </Tooltip>
               <InputBase
-                placeholder="Search..."
+                placeholder="Search by title..."
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
