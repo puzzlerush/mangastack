@@ -1,61 +1,56 @@
-import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Redirect } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 import Loader from './Loader';
 import MangaGrid from './MangaGrid';
-import axios from '../config/axios';
+import { useResults } from '../hooks/mangadb-api';
 
 const SearchPage = ({ nsfw }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [results, setResults] = useState([]);
-  const [count, setCount] = useState(0);
   const query = new URLSearchParams(useLocation().search);
   const searchQuery = query.get('q');
   const page = parseInt(query.get('page')) || 1;
   const perPage = 12;
-  const totalPages = Math.ceil(count / perPage);
-  useEffect(() => {
-    const searchManga = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get(`/mangadb/search`, {
-          params: {
-            q: searchQuery,
-            nsfw,
-            limit: perPage,
-            skip: (page - 1) * perPage
-          }
-        });
-        setResults(response.data.results);
-        setCount(response.data.count);
-      } catch (e) { }
-      setIsLoading(false);
-    };
-    searchManga();
-  }, [searchQuery, nsfw, page]);
 
+  const [isLoading, results, count] = useResults('/mangadb/search', {
+    q: searchQuery,
+    nsfw,
+    limit: perPage,
+    skip: (page - 1) * perPage
+  });
+
+
+  const pageNavURL = `/search?q=${searchQuery}&page=`;
+  
   if (isLoading) {
     return <Loader />;
-  } else {
-    return (
-      <div>
-        {results.length > 0 ? (
-          <>
-            <Typography align="center">
-              {`Showing search results for "${searchQuery}"`}
-            </Typography>
-            <MangaGrid
-              pageNavURL={`/search?q=${searchQuery}&page=`}
-              page={page}
-              totalPages={totalPages}
-              mangaList={results}
-            />
-          </>
-        ) : searchQuery ? 'There are no results for the search.' : 'No query, no results.'}
-      </div>
-    );
   }
+
+  const totalPages = Math.ceil(count / perPage);
+  if (totalPages > 0 && page > totalPages) {
+    return <Redirect to={pageNavURL + totalPages} />;
+  }
+
+  return (
+    <div>
+      {results.length > 0 ? (
+        <>
+          <Typography align="center">
+            {`Showing search results for "${searchQuery}"`}
+          </Typography>
+          <MangaGrid
+            pageNavURL={pageNavURL}
+            page={page}
+            totalPages={totalPages}
+            mangaList={results}
+          />
+        </>
+      ) : (
+          <Typography align="center">
+            {searchQuery ? 'There are no results for the search.' : 'No query, no results.'}
+          </Typography>
+        )}
+    </div>
+  );
 };
 
 const mapStateToProps = (state) => ({

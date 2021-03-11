@@ -6,6 +6,7 @@ import ReadChapterPage from '../components/ReadChapterPage';
 import SearchPage from '../components/SearchPage';
 import CurrentlyReadingPage from '../components/CurrentlyReadingPage';
 import HomePage from '../components/HomePage';
+import AllMangaPage from '../components/AllMangaPage';
 
 const AppRouter = () => {
   return (
@@ -20,6 +21,9 @@ const AppRouter = () => {
         </Route>
         <Route path="/currently-reading">
           <CurrentlyReadingPage />
+        </Route>
+        <Route path="/manga/all">
+          <AllMangaPage />
         </Route>
         <Route path="/manga/:id" exact>
           <MangaPage />

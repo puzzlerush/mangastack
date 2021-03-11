@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Typography, Divider, Grid, Box } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { Typography, Divider, Grid, Box, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import axios from '../config/axios';
 import Loader from './Loader';
 import MangaTile from './MangaTile';
+import popularManga from '../assets/popularManga';
 
 const useStyles = makeStyles((theme) => ({
   allcaps: {
@@ -13,7 +15,12 @@ const useStyles = makeStyles((theme) => ({
   },
   siteTitle: {
     fontSize: '3em',
-    fontWeight: 300
+    [theme.breakpoints.only('xs')]: {
+      fontSize: '2.2em'
+    },
+    [theme.breakpoints.only('sm')]: {
+      fontSize: '2.5em'
+    }
   },
   subtitle: {
     margin: '15px 0'
@@ -26,30 +33,33 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = () => {
   const classes = useStyles();
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [popularManga, setPopularManga] = useState([]);
+  // For now, hard code the featured manga to display to improve SEO
+  const isLoading = false;
 
-  useEffect(() => {
-    const fetchPopularManga = async () => {
-      setIsLoading(true);
-      const response = await axios.get('/mangadb', {
-        params: {
-          sortby: 'views',
-          ascending: false,
-          limit: 4,
-          skip: 0
-        }
-      });
-      setPopularManga(response.data);
-      setIsLoading(false);
-    };
-    fetchPopularManga();
-  }, []);
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [popularManga, setPopularManga] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchPopularManga = async () => {
+  //     setIsLoading(true);
+  //     const response = await axios.get('/mangadb', {
+  //       params: {
+  //         sortby: 'views',
+  //         ascending: false,
+  //         limit: 4,
+  //         skip: 0
+  //       }
+  //     });
+  //     setPopularManga(response.data);
+  //     setIsLoading(false);
+  //   };
+  //   fetchPopularManga();
+  // }, []);
 
   const popularMangaToDisplay = popularManga.map((manga) => {
     const { id } = manga;
     return (
-      <Grid key={id} item xs={12} sm={6} lg={4} xl={3}>
+      <Grid key={id} item xs={12} sm={6} lg={3}>
         <MangaTile {...manga} />
       </Grid>
     );
@@ -60,27 +70,48 @@ const HomePage = () => {
   } else {
     return (
       <div>
-        <Typography 
-          className={clsx(classes.siteTitle, classes.allcaps)} 
-          variant="h1" 
-          align="center"
-        >
-          Manga Stack
-        </Typography>
-        <Typography 
-          className={clsx(classes.subtitle, classes.allcaps)} 
-          variant="subtitle1" 
-          align="center"
-        >
-          Read over 50,000 manga, webtoons, and comics for free!
-        </Typography>
-        <Divider className={classes.divider} />
         <Box p={2}>
-          <Typography 
+          <Typography
+            className={clsx(classes.siteTitle, classes.allcaps)}
+            variant="h1"
+            align="center"
+          >
+            Manga Stack
+        </Typography>
+          <Typography
             className={clsx(classes.subtitle, classes.allcaps)}
-            variant="h5">
+            variant="subtitle1"
+            align="center"
+          >
+            Read over 50,000 manga, webtoons, and comics for free!
+        </Typography>
+          <Divider className={classes.divider} />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              maxWidth: 400,
+              margin: 'auto'
+            }}
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              component={Link}
+              to="/manga/all"
+              fullWidth
+            >
+              View All Manga
+            </Button>
+          </div>
+          <Typography
+            className={clsx(classes.subtitle, classes.allcaps)}
+            variant="h6"
+          >
             Most Popular Manga
           </Typography>
+
           <Grid
             container
             spacing={2}

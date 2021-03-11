@@ -105,14 +105,16 @@ const MangaPage = ({ userMangaList }) => {
                       Continue reading
                     </Button>
                   ) : (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        component={Link}
-                        to={`/manga/${id}/chapter/${chapters[chapters.length - 1].id}`}
-                      >
-                        Start reading
-                      </Button>
+                      chapters.length > 0 && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          component={Link}
+                          to={`/manga/${id}/chapter/${chapters[chapters.length - 1].id}`}
+                        >
+                          Start reading
+                        </Button>
+                      )
                     )}
                 </p>
                 <Accordion className={classes.accordion}>
