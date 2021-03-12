@@ -18,39 +18,36 @@ const SearchPage = ({ nsfw }) => {
     skip: (page - 1) * perPage
   });
 
-
+  const totalPages = Math.ceil(count / perPage);
   const pageNavURL = `/search?q=${searchQuery}&page=`;
-  
+
   if (isLoading) {
     return <Loader />;
-  }
-
-  const totalPages = Math.ceil(count / perPage);
-  if (totalPages > 0 && page > totalPages) {
+  } else if (totalPages > 0 && page > totalPages) {
     return <Redirect to={pageNavURL + totalPages} />;
+  } else {
+    return (
+      <div>
+        {results.length > 0 ? (
+          <>
+            <Typography align="center">
+              {`Showing search results for "${searchQuery}"`}
+            </Typography>
+            <MangaGrid
+              pageNavURL={pageNavURL}
+              page={page}
+              totalPages={totalPages}
+              mangaList={results}
+            />
+          </>
+        ) : (
+            <Typography align="center">
+              {searchQuery ? 'There are no results for the search.' : 'No query, no results.'}
+            </Typography>
+          )}
+      </div>
+    );
   }
-
-  return (
-    <div>
-      {results.length > 0 ? (
-        <>
-          <Typography align="center">
-            {`Showing search results for "${searchQuery}"`}
-          </Typography>
-          <MangaGrid
-            pageNavURL={pageNavURL}
-            page={page}
-            totalPages={totalPages}
-            mangaList={results}
-          />
-        </>
-      ) : (
-          <Typography align="center">
-            {searchQuery ? 'There are no results for the search.' : 'No query, no results.'}
-          </Typography>
-        )}
-    </div>
-  );
 };
 
 const mapStateToProps = (state) => ({
