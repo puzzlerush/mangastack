@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { Grid, Typography, List, ListItem } from '@material-ui/core';
+import { Grid, Typography, List, ListItem, LinearProgress, Box } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import ChapterList from './ChapterList';
 import PageNavigation from './PageNavigation';
@@ -18,6 +18,7 @@ const ReadChapterPage = ({ setReading }) => {
   const [allChapters, setAllChapters] = useState([]);
   const [chapterInfo, setChapterInfo] = useState({});
   const [chapterPages, setChapterPages] = useState([]);
+  const [imagesLoaded, setImagesLoaded] = useState(0);
 
   useEffect(() => {
     const fetchChapterInfo = async () => {
@@ -38,6 +39,10 @@ const ReadChapterPage = ({ setReading }) => {
       const { pages, server } = response.data.data;
       const pageURLs = pages.map((page) => `${server}${hash}/${page}`);
       setChapterPages(pageURLs);
+      setImagesLoaded(0);
+      setTimeout(() => {
+        setImagesLoaded(pageURLs.length);
+      }, 10000)
     };
 
     const fetchData = async () => {
@@ -53,14 +58,23 @@ const ReadChapterPage = ({ setReading }) => {
     fetchData();
   }, [chapterId]);
 
+  const imagesLoading = !(chapterPages.length > 0 && imagesLoaded >= chapterPages.length);
+
   const pagesToDisplay = chapterPages.map((chapterPage, index) => (
     <ListItem key={chapterPage}>
-      <img style={{ width: '100%' }} src={chapterPage} alt={`Error loading page ${index + 1}`} />
+      <img
+        style={{
+          width: '100%',
+          display: imagesLoading ? 'none' : 'block'
+        }}
+        src={chapterPage}
+        alt={`Error loading page ${index + 1}`}
+        onLoad={() => setImagesLoaded(imagesLoaded + 1)} />
     </ListItem>
   ));
 
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   } else if (error) {
     return (
       <Alert severity="error">
@@ -95,11 +109,11 @@ const ReadChapterPage = ({ setReading }) => {
       >
         <Grid item xs="auto" sm={1} md={4} />
         <Grid item xs={12} sm={10} md={8}>
-          <PageNavigation 
+          <PageNavigation
             prevLink={`${chapterBaseURL}${prevChapter && prevChapter.id}`}
             nextLink={`${chapterBaseURL}${nextChapter && nextChapter.id}`}
             disablePrev={!prevChapter}
-            disableNext={!nextChapter} 
+            disableNext={!nextChapter}
           />
           <div style={{ textAlign: 'center' }}>
             <Typography variant="h4">
@@ -115,17 +129,37 @@ const ReadChapterPage = ({ setReading }) => {
               </Typography>
             )}
           </div>
+          {imagesLoading && (
+            <Box m={4}>
+              <Typography variant="body2" color="textSecondary" align="center">
+                Loading images...
+              </Typography>
+              <Box display="flex" alignItems="center">
+                <Box width="100%" m={2}>
+                  <LinearProgress
+                    variant="determinate"
+                    value={imagesLoaded / chapterPages.length * 100}
+                  />
+                </Box>
+                <Box minWidth={35}>
+                  <Typography variant="body2" color="textSecondary">
+                    {imagesLoaded + '/' + chapterPages.length}
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
+          )}
           <List>
             {pagesToDisplay}
           </List>
           <ChapterList chapters={allChapters} selectedChapter={chapterId} />
           <br />
-          <PageNavigation 
+          <PageNavigation
             topOfPage={false}
             prevLink={`${chapterBaseURL}${prevChapter && prevChapter.id}`}
             nextLink={`${chapterBaseURL}${nextChapter && nextChapter.id}`}
             disablePrev={!prevChapter}
-            disableNext={!nextChapter} 
+            disableNext={!nextChapter}
           />
         </Grid>
         <Grid item xs="auto" sm={1} md={4} />
