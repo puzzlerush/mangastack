@@ -12,7 +12,8 @@ import {
   Menu as MenuIcon,
   Search as SearchIcon,
   Home as HomeIcon,
-  Book as BookIcon
+  Book as BookIcon,
+  ViewModule as ViewModuleIcon
 } from '@material-ui/icons';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { setTheme, setNSFW } from '../actions/settings';
@@ -87,6 +88,11 @@ const Header = ({ theme, setTheme, nsfw, setNSFW }) => {
       label: 'Home',
       path: '/',
       Icon: HomeIcon
+    },
+    {
+      label: 'All Manga',
+      path: '/manga/all',
+      Icon: ViewModuleIcon
     },
     {
       label: 'Currently Reading',

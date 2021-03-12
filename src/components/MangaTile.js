@@ -72,7 +72,7 @@ const MangaTile = ({ id, title, artist, author, description, rating, views, main
             style={{ color: 'inherit', textDecoration: 'none' }}
           >
             <Typography component="h6" variant="h6">
-              {getShortText(title, 75)}
+              {getShortText(title, 50)}
             </Typography>
           </Link>
           <Rating value={rating.bayesian / 2} precision={0.5} readOnly />
