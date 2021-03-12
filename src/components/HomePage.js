@@ -7,6 +7,7 @@ import axios from '../config/axios';
 import Loader from './Loader';
 import MangaTile from './MangaTile';
 import popularManga from '../assets/popularManga';
+import topRatedManga from '../assets/topRatedManga';
 
 const useStyles = makeStyles((theme) => ({
   allcaps: {
@@ -65,6 +66,15 @@ const HomePage = () => {
     );
   });
 
+  const topRatedMangaToDisplay = topRatedManga.slice(0, 4).map((manga) => {
+    const { id } = manga;
+    return (
+      <Grid key={id} item xs={12} sm={6} lg={3}>
+        <MangaTile {...manga} />
+      </Grid>
+    );
+  });
+
   if (isLoading) {
     return <Loader />;
   } else {
@@ -105,20 +115,37 @@ const HomePage = () => {
               View All Manga
             </Button>
           </div>
-          <Typography
-            className={clsx(classes.subtitle, classes.allcaps)}
-            variant="h6"
-          >
-            Most Popular Manga
+          <Box mb={7}>
+            <Typography
+              className={clsx(classes.subtitle, classes.allcaps)}
+              variant="h6"
+            >
+              Most Popular Manga
           </Typography>
 
-          <Grid
-            container
-            spacing={2}
-            m={2}
-          >
-            {popularMangaToDisplay}
-          </Grid>
+            <Grid
+              container
+              spacing={2}
+              m={2}
+            >
+              {popularMangaToDisplay}
+            </Grid>
+          </Box>
+          <Box mb={7}>
+            <Typography
+              className={clsx(classes.subtitle, classes.allcaps)}
+              variant="h6"
+            >
+              Top Rated Manga
+          </Typography>
+            <Grid
+              container
+              spacing={2}
+              m={2}
+            >
+              {topRatedMangaToDisplay}
+            </Grid>
+          </Box>
         </Box>
 
       </div>
