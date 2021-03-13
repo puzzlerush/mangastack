@@ -5,13 +5,13 @@
   publish = "build"
 
   [[redirects]]
-    from = "/api"
+    from = "/api/*"
     to = "https://api.mangadex.org/v2"
     status = 200
     force = true
 
   [[redirects]]
-    from = "/mangadb"
+    from = "/mangadb/*"
     to = "https://mangadb-search.herokuapp.com/mangadb"
     status = 200
     force = true
