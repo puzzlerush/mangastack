@@ -9,9 +9,7 @@ const mangadexOptions = {
 };
 
 const mangadbOptions = {
-  target: process.env.NODE_ENV === 'production'
-    ? 'http://mangadb-search.herokuapp.com'
-    : 'http://localhost:5000',
+  target: 'http://localhost:5000',
   changeOrigin: true
 };
 

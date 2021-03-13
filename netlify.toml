@@ -11,7 +11,13 @@
     force = true
 
   [[redirects]]
-    from = "/mangadb/*"
+    from = "/mangadb/search"
+    to = "https://mangadb-search.herokuapp.com/mangadb/search"
+    status = 200
+    force = true
+
+  [[redirects]]
+    from = "/mangadb"
     to = "https://mangadb-search.herokuapp.com/mangadb"
     status = 200
     force = true
