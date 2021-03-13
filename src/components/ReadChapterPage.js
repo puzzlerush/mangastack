@@ -26,7 +26,7 @@ const ReadChapterPage = ({ setReading }) => {
 
   useEffect(() => {
     const fetchChapterInfo = async () => {
-      const response = await axios.get(`/manga/${mangaId}/chapters`);
+      const response = await axios.get(`/api/manga/${mangaId}/chapters`);
       const { chapters, groups } = response.data.data;
       setAllChapters(getEnglishChaptersWithGroups(chapters, groups));
       const currentChapter = chapters.find((chapter) => chapter.id === parseInt(chapterId));
@@ -39,7 +39,7 @@ const ReadChapterPage = ({ setReading }) => {
     };
 
     const fetchPages = async (hash) => {
-      const response = await axios.get(`/chapter/${hash}`);
+      const response = await axios.get(`/api/chapter/${hash}`);
       const { pages, server } = response.data.data;
       const pageURLs = pages.map((page) => `${server}${hash}/${page}`);
       setChapterPages(pageURLs);

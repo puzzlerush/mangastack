@@ -4,12 +4,24 @@
   functions = "netlify/functions"
   publish = "build"
 
-  ## Uncomment to use this redirect for Single Page Applications like create-react-app.
-  ## Not needed for static site generators.
-  #[[redirects]]
-  #  from = "/*"
-  #  to = "/index.html"
-  #  status = 200
+  [[redirects]]
+    from = "/api"
+    to = "https://api.mangadex.org/v2/manga"
+    status = 200
+    force = true
+
+  [[redirects]]
+    from = "/mangadb"
+    to = "https://mangadb-search.herokuapp.com/mangadb"
+    status = 200
+    force = true
+
+  # Uncomment to use this redirect for Single Page Applications like create-react-app.
+  # Not needed for static site generators.
+  [[redirects]]
+    from = "/*"
+    to = "/index.html"
+    status = 200
 
   ## (optional) Settings for Netlify Dev
   ## https://github.com/netlify/cli/blob/master/docs/netlify-dev.md#project-detection
