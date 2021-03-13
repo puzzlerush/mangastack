@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { useHistory, useLocation, Redirect } from 'react-router-dom';
 import { Typography, Select } from '@material-ui/core';
+import { Helmet } from 'react-helmet';
 import Loader from './Loader';
 import MangaGrid from './MangaGrid';
 import { useResults } from '../hooks/mangadb-api';
@@ -32,6 +33,13 @@ const AllMangaPage = ({ nsfw }) => {
   } else {
     return (
       <div>
+        <Helmet>
+          <title>All Manga - MangaStack</title>
+          <meta
+            name="keywords"
+            content={results.map((result) => result.title).join(', ')}
+          />
+        </Helmet>
         <Typography component="div" align="center">
           {`Showing all manga sorted in `}
           <Select

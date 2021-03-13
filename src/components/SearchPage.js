@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { useLocation, Redirect } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
+import { Helmet } from 'react-helmet';
 import Loader from './Loader';
 import MangaGrid from './MangaGrid';
 import { useResults } from '../hooks/mangadb-api';
@@ -30,6 +31,13 @@ const SearchPage = ({ nsfw }) => {
       <div>
         {results.length > 0 ? (
           <>
+            <Helmet>
+              <title>Search - MangaStack</title>
+              <meta
+                name="keywords"
+                content={results.map((result) => result.title).join(', ')}
+              />
+            </Helmet>
             <Typography align="center">
               {`Showing search results for "${searchQuery}"`}
             </Typography>

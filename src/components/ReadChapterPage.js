@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Grid, Typography, List, ListItem, LinearProgress, Box } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
+import { Helmet } from 'react-helmet';
 import ChapterList from './ChapterList';
 import PageNavigation from './PageNavigation';
 import Loader from './Loader';
 import axios from '../config/axios';
-import { getEnglishChaptersWithGroups } from '../hooks/mangadex-api';
+import { getEnglishChaptersWithGroups, useMangaData } from '../hooks/mangadex-api';
 import { setReading } from '../actions/mangaList';
+import { htmlDecode, generateMetaKeywordsTitle } from '../utils/utils';
 
 const ReadChapterPage = ({ setReading }) => {
   const { mangaId, chapterId } = useParams();
@@ -19,6 +21,8 @@ const ReadChapterPage = ({ setReading }) => {
   const [chapterInfo, setChapterInfo] = useState({});
   const [chapterPages, setChapterPages] = useState([]);
   const [imagesLoaded, setImagesLoaded] = useState(0);
+  
+  const { mangaInfo } = useMangaData(mangaId);
 
   useEffect(() => {
     const fetchChapterInfo = async () => {
@@ -101,70 +105,84 @@ const ReadChapterPage = ({ setReading }) => {
 
     const chapterBaseURL = `/manga/${mangaId}/chapter/`;
     return (
-      <Grid
-        container
-        direction="column"
-        justify="center"
-        alignItems="center"
-      >
-        <Grid item xs="auto" sm={1} md={4} />
-        <Grid item xs={12} sm={10} md={8}>
-          <PageNavigation
-            prevLink={`${chapterBaseURL}${prevChapter && prevChapter.id}`}
-            nextLink={`${chapterBaseURL}${nextChapter && nextChapter.id}`}
-            disablePrev={!prevChapter}
-            disableNext={!nextChapter}
+      <>
+        <Helmet>
+          <title>
+            {`${mangaTitle} - Chapter ${chapterNumber}${title ? `: ${title}` : ''} - MangaStack`}
+          </title>
+          <meta
+            name="description"
+            content={htmlDecode(mangaInfo.description).replace(/\[.*?\]/g, '')}
           />
-          <div style={{ textAlign: 'center' }}>
-            <Typography variant="h4">
-              {mangaTitle}
-            </Typography>
-            <br />
-            <Typography variant="h6">
-              Chapter {chapterNumber} {title && ` - ${title}`}
-            </Typography>
-            {scanlatorNames && (
-              <Typography variant="subtitle1">
-                Scanlated by {scanlatorNames}
+          <meta
+            name="keywords"
+            content={generateMetaKeywordsTitle(mangaTitle)}
+          />
+        </Helmet>
+        <Grid
+          container
+          direction="column"
+          justify="center"
+          alignItems="center"
+        >
+          <Grid item xs="auto" sm={1} md={4} />
+          <Grid item xs={12} sm={10} md={8}>
+            <PageNavigation
+              prevLink={`${chapterBaseURL}${prevChapter && prevChapter.id}`}
+              nextLink={`${chapterBaseURL}${nextChapter && nextChapter.id}`}
+              disablePrev={!prevChapter}
+              disableNext={!nextChapter}
+            />
+            <div style={{ textAlign: 'center' }}>
+              <Typography variant="h4">
+                {mangaTitle}
               </Typography>
-            )}
-          </div>
-          {imagesLoading && (
-            <Box m={4}>
-              <Typography variant="body2" color="textSecondary" align="center">
-                Loading images...
+              <br />
+              <Typography variant="h6">
+                Chapter {chapterNumber} {title && ` - ${title}`}
               </Typography>
-              <Box display="flex" alignItems="center">
-                <Box width="100%" m={2}>
-                  <LinearProgress
-                    variant="determinate"
-                    value={imagesLoaded / chapterPages.length * 100}
-                  />
-                </Box>
-                <Box minWidth={35}>
-                  <Typography variant="body2" color="textSecondary">
-                    {imagesLoaded + '/' + chapterPages.length}
-                  </Typography>
+              {scanlatorNames && (
+                <Typography variant="subtitle1">
+                  Scanlated by {scanlatorNames}
+                </Typography>
+              )}
+            </div>
+            {imagesLoading && (
+              <Box m={4}>
+                <Typography variant="body2" color="textSecondary" align="center">
+                  Loading images...
+              </Typography>
+                <Box display="flex" alignItems="center">
+                  <Box width="100%" m={2}>
+                    <LinearProgress
+                      variant="determinate"
+                      value={imagesLoaded / chapterPages.length * 100}
+                    />
+                  </Box>
+                  <Box minWidth={35}>
+                    <Typography variant="body2" color="textSecondary">
+                      {imagesLoaded + '/' + chapterPages.length}
+                    </Typography>
+                  </Box>
                 </Box>
               </Box>
-            </Box>
-          )}
-          <List>
-            {pagesToDisplay}
-          </List>
-          <ChapterList chapters={allChapters} selectedChapter={chapterId} />
-          <br />
-          <PageNavigation
-            topOfPage={false}
-            prevLink={`${chapterBaseURL}${prevChapter && prevChapter.id}`}
-            nextLink={`${chapterBaseURL}${nextChapter && nextChapter.id}`}
-            disablePrev={!prevChapter}
-            disableNext={!nextChapter}
-          />
+            )}
+            <List>
+              {pagesToDisplay}
+            </List>
+            <ChapterList chapters={allChapters} selectedChapter={chapterId} />
+            <br />
+            <PageNavigation
+              topOfPage={false}
+              prevLink={`${chapterBaseURL}${prevChapter && prevChapter.id}`}
+              nextLink={`${chapterBaseURL}${nextChapter && nextChapter.id}`}
+              disablePrev={!prevChapter}
+              disableNext={!nextChapter}
+            />
+          </Grid>
+          <Grid item xs="auto" sm={1} md={4} />
         </Grid>
-        <Grid item xs="auto" sm={1} md={4} />
-      </Grid>
-
+      </>
     );
   }
 };

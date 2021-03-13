@@ -11,3 +11,20 @@ export const toQueryString = (params) => {
   }
   return str.join('&');
 };
+
+export const generateMetaKeywordsTitle = (title) => {
+  const keywords = [
+    title,
+    `${title} manga`,
+    `Read ${title} online`,
+    `${title} online`,
+    `${title} online for free`,
+    `Read ${title} chapters for free`,
+    `${title} series`,
+    `${title} chapters`,
+    `${title} scans`,
+    `${title} kissmanga`,
+    `${title} mangadex`
+  ];
+  return keywords.join(', ');
+};
