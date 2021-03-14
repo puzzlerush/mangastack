@@ -9,6 +9,7 @@
     to = "https://api.mangadex.org/v2"
     status = 200
     force = true
+    headers = {X-Forwarded-Proto = 'https'}
 
   [[redirects]]
     from = "/mangadb/search"
