@@ -90,14 +90,43 @@ const ReadChapterPage = ({ setReading }) => {
     const { id: chapterId, mangaTitle, chapter: chapterNumber, title, groups } = chapterInfo;
     let prevChapter, nextChapter, scanlatorNames;
     if (allChapters) {
-      const chaptersBySameScanlator = allChapters.filter((chapter) => {
+      const index = allChapters.findIndex((chapter) => chapter.id === chapterId);
+
+      // Find the previous/next chapter's number
+      let prevChapterNumber;
+      for (let i = index; i < allChapters.length; i += 1) {
+        if (chapterNumber !== allChapters[i].chapter) {
+          prevChapterNumber = allChapters[i].chapter;
+          break;
+        }
+      }
+
+      let nextChapterNumber;
+      for (let i = index; i >= 0; i -= 1) {
+        if (chapterNumber !== allChapters[i].chapter) {
+          nextChapterNumber = allChapters[i].chapter;
+          break;
+        }
+      }
+
+      // Get all chapters with the same number as the previous/next chapter
+      const beforeChapters = allChapters.filter((chapter) => chapter.chapter === prevChapterNumber);
+      const beforeBySameScanlator = beforeChapters.find((chapter) => {
         for (const group of groups) {
           return chapter.groups[group] !== undefined;
         }
       });
-      const index = chaptersBySameScanlator.findIndex((chapter) => chapter.id === chapterId);
-      prevChapter = chaptersBySameScanlator[index + 1];
-      nextChapter = chaptersBySameScanlator[index - 1];
+
+      const afterChapters = allChapters.filter((chapter) => chapter.chapter === nextChapterNumber);
+      const afterBySameScanlator = afterChapters.find((chapter) => {
+        for (const group of groups) {
+          return chapter.groups[group] !== undefined;
+        }
+      });
+
+      // If the previous/next chapter has a scan by the same scanlator, link to that one
+      prevChapter = beforeBySameScanlator || beforeChapters[beforeChapters.length - 1];
+      nextChapter = afterBySameScanlator || afterChapters[afterChapters.length - 1];
 
       const currentChapterFoundInList = allChapters.find((chapter) => chapter.id === chapterId);
       scanlatorNames = Object.values(currentChapterFoundInList.groups).join(', ');
