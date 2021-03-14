@@ -6,20 +6,13 @@
 
   [[redirects]]
     from = "/api/*"
-    to = "https://api.mangadex.org/v2"
-    status = 200
-    force = true
-    headers = {X-Forwarded-Proto = https}
-
-  [[redirects]]
-    from = "/mangadb/search"
-    to = "https://mangadb-search.herokuapp.com/mangadb/search"
+    to = "https://api.mangadex.org/v2/:splat"
     status = 200
     force = true
 
   [[redirects]]
-    from = "/mangadb"
-    to = "https://mangadb-search.herokuapp.com/mangadb"
+    from = "/mangadb/*"
+    to = "https://mangadb-search.herokuapp.com/mangadb/:splat"
     status = 200
     force = true
 
