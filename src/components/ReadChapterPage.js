@@ -154,8 +154,8 @@ const ReadChapterPage = ({ setReading }) => {
           justify="center"
           alignItems="center"
         >
-          <Grid item xs="auto" sm={1} md={4} />
-          <Grid item xs={12} sm={10} md={8}>
+          <Grid item xs="auto" md={4} />
+          <Grid item xs={12} md={8}>
             <PageNavigation
               prevLink={`${chapterBaseURL}${prevChapter && prevChapter.id}`}
               nextLink={`${chapterBaseURL}${nextChapter && nextChapter.id}`}
@@ -209,7 +209,7 @@ const ReadChapterPage = ({ setReading }) => {
               disableNext={!nextChapter}
             />
           </Grid>
-          <Grid item xs="auto" sm={1} md={4} />
+          <Grid item xs="auto" md={4} />
         </Grid>
       </>
     );
