@@ -28,8 +28,11 @@ Currently, the backend is hosted on Heroku free tier, which can sometimes lead t
   <img height="400" src="./screenshots/search-dark-iphone-x.png">
   <img height="400" src="./screenshots/currently-reading-dark-iphone-x.png">
   <img height="400" src="./screenshots/manga-dark-iphone-x.png">
+</p>
+<p align="center">
   <img height="400" src="./screenshots/read-light-iphone-x.png">
   <img height="400" src="./screenshots/loading-light-iphone-x.png">
+  <img height="400" src="./screenshots/all-light-iphone-x.png">
 </p>
 
 <br>
