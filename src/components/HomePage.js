@@ -93,7 +93,7 @@ const HomePage = () => {
             variant="subtitle1"
             align="center"
           >
-            Read over 50,000 manga, webtoons, and comics for free!
+            Mobile friendly reader for MangaDex
         </Typography>
           <Divider className={classes.divider} />
           <div
