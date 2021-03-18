@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, Link } from 'react-router-dom';
@@ -20,6 +21,7 @@ import {
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { setTheme, setNSFW, setLanguage } from '../actions/settings';
 import { deleteAll } from '../actions/mangaList';
+import languageOptions from '../assets/languageOptions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -128,41 +130,6 @@ const Header = ({
       <ListItemText primary={label} />
     </ListItem>
   ));
-
-  const languageOptions = [
-    {
-      value: 'gb',
-      label: 'English'
-    },
-    {
-      value: 'ru',
-      label: 'Russian'
-    },
-    {
-      value: 'mx',
-      label: 'Spanish'
-    },
-    {
-      value: 'in',
-      label: 'Hindi'
-    },
-    {
-      value: 'fr',
-      label: 'French'
-    },
-    {
-      value: 'br',
-      label: 'Portuguese'
-    },
-    {
-      value: 'it',
-      label: 'Italian'
-    },
-    {
-      value: 'pl',
-      label: 'Polish'
-    },
-  ];
 
   const languageOptionsToDisplay = languageOptions.map((languageOption) => (
     <option
@@ -326,6 +293,14 @@ const Header = ({
       </Dialog>
     </div>
   );
+};
+
+Header.propTypes = {
+  language: PropTypes.oneOf(languageOptions.map((language) => language.value))
+};
+
+Header.defaultProps = {
+  language: 'gb'
 };
 
 const mapStateToProps = (state) => ({

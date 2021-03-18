@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 import {
@@ -14,6 +15,7 @@ import Loader from './Loader'
 import ChapterList from './ChapterList';
 import { useMangaData } from '../hooks/mangadex-api';
 import { htmlDecode, generateMetaKeywordsTitle } from '../utils/utils';
+import languageOptions from '../assets/languageOptions';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -160,6 +162,14 @@ const MangaPage = ({ language, userMangaList }) => {
       </>
     );
   }
+};
+
+MangaPage.propTypes = {
+  language: PropTypes.oneOf(languageOptions.map((language) => language.value))
+};
+
+MangaPage.defaultProps = {
+  language: 'gb'
 };
 
 const mapStateToProps = (state) => ({

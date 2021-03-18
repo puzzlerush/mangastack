@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useParams, useHistory, Link } from 'react-router-dom';
@@ -11,6 +12,7 @@ import axios from '../config/axios';
 import { getLanguageChaptersWithGroups, useMangaData } from '../hooks/mangadex-api';
 import { setReading } from '../actions/mangaList';
 import { htmlDecode, generateMetaKeywordsTitle } from '../utils/utils';
+import languageOptions from '../assets/languageOptions';
 
 const ReadChapterPage = ({ language, setReading }) => {
   const { mangaId, chapterId } = useParams();
@@ -231,6 +233,14 @@ const ReadChapterPage = ({ language, setReading }) => {
       </>
     );
   }
+};
+
+ReadChapterPage.propTypes = {
+  language: PropTypes.oneOf(languageOptions.map((language) => language.value))
+};
+
+ReadChapterPage.defaultProps = {
+  language: 'gb'
 };
 
 const mapStateToProps = (state) => ({
