@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from '../config/axios';
 import { htmlDecode } from '../utils/utils';
 
-export const getLanguageChaptersWithGroups = (chapters, groups, language) => {
+export const getLanguageChaptersWithGroups = (chapters, groups, language = 'gb') => {
   const languageChapters = chapters.filter((chapter) => chapter.language === language);
   const groupDictionary = {};
   groups.forEach((group) => groupDictionary[group.id] = group.name);
