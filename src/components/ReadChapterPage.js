@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory, Link } from 'react-router-dom';
 import { Grid, Typography, List, ListItem, LinearProgress, Box } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 import { Helmet } from 'react-helmet';
@@ -8,11 +8,11 @@ import ChapterList from './ChapterList';
 import PageNavigation from './PageNavigation';
 import Loader from './Loader';
 import axios from '../config/axios';
-import { getEnglishChaptersWithGroups, useMangaData } from '../hooks/mangadex-api';
+import { getLanguageChaptersWithGroups, useMangaData } from '../hooks/mangadex-api';
 import { setReading } from '../actions/mangaList';
 import { htmlDecode, generateMetaKeywordsTitle } from '../utils/utils';
 
-const ReadChapterPage = ({ setReading }) => {
+const ReadChapterPage = ({ language, setReading }) => {
   const { mangaId, chapterId } = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -21,14 +21,26 @@ const ReadChapterPage = ({ setReading }) => {
   const [chapterInfo, setChapterInfo] = useState({});
   const [chapterPages, setChapterPages] = useState([]);
   const [imagesLoaded, setImagesLoaded] = useState(0);
-  
-  const { mangaInfo } = useMangaData(mangaId);
+
+  const { mangaInfo } = useMangaData(mangaId, language);
+
+  // If the user changes the language while reading a chapter,
+  // redirect them to the Manga page
+  let history = useHistory();
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    history.push(`/manga/${mangaId}`);
+  }, [language])
 
   useEffect(() => {
     const fetchChapterInfo = async () => {
       const response = await axios.get(`/api/manga/${mangaId}/chapters`);
       const { chapters, groups } = response.data.data;
-      setAllChapters(getEnglishChaptersWithGroups(chapters, groups));
+      setAllChapters(getLanguageChaptersWithGroups(chapters, groups, language));
       const currentChapter = chapters.find((chapter) => chapter.id === parseInt(chapterId));
       if (!currentChapter) {
         throw new Error();
@@ -163,9 +175,14 @@ const ReadChapterPage = ({ setReading }) => {
               disableNext={!nextChapter}
             />
             <div style={{ textAlign: 'center' }}>
-              <Typography variant="h4">
-                {mangaTitle}
-              </Typography>
+              <Link
+                to={`/manga/${mangaId}`}
+                style={{ color: 'inherit', textDecoration: 'none' }}
+              >
+                <Typography variant="h4">
+                  {mangaTitle}
+                </Typography>
+              </Link>
               <br />
               <Typography variant="h6">
                 Chapter {chapterNumber} {title && ` - ${title}`}
@@ -216,8 +233,12 @@ const ReadChapterPage = ({ setReading }) => {
   }
 };
 
+const mapStateToProps = (state) => ({
+  language: state.settings.language,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   setReading: (mangaInfo, chapterInfo) => dispatch(setReading(mangaInfo, chapterInfo))
 });
 
-export default connect(undefined, mapDispatchToProps)(ReadChapterPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ReadChapterPage);

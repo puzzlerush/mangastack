@@ -8,6 +8,8 @@ const mangaListReducer = (state = [], action) => {
       return [{ mangaInfo, chapterInfo }, ...filteredState];
     case 'DELETE_ITEM':
       return state.filter(({ mangaInfo }) => mangaInfo.id !== action.mangaId);
+    case 'DELETE_ALL':
+      return [];
     default:
       return state;
   }

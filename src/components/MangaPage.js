@@ -42,12 +42,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const MangaPage = ({ userMangaList }) => {
+const MangaPage = ({ language, userMangaList }) => {
   const classes = useStyles();
 
   const { id } = useParams();
 
-  const { isLoading, error, mangaInfo, chapters } = useMangaData(id);
+  const { isLoading, error, mangaInfo, chapters } = useMangaData(id, language);
 
   if (isLoading) {
     return <Loader />;
@@ -163,6 +163,7 @@ const MangaPage = ({ userMangaList }) => {
 };
 
 const mapStateToProps = (state) => ({
+  language: state.settings.language,
   userMangaList: state.mangaList
 });
 

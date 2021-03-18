@@ -8,3 +8,7 @@ export const deleteItem = (mangaId) => ({
   type: 'DELETE_ITEM',
   mangaId
 });
+
+export const deleteAll = () => ({
+  type: 'DELETE_ALL'
+});

@@ -2,19 +2,19 @@ import { useState, useEffect } from 'react';
 import axios from '../config/axios';
 import { htmlDecode } from '../utils/utils';
 
-export const getEnglishChaptersWithGroups = (chapters, groups) => {
-  const englishChapters = chapters.filter((chapter) => chapter.language === "gb");
+export const getLanguageChaptersWithGroups = (chapters, groups, language) => {
+  const languageChapters = chapters.filter((chapter) => chapter.language === language);
   const groupDictionary = {};
   groups.forEach((group) => groupDictionary[group.id] = group.name);
-  const modifiedEnglishChapters = englishChapters.map((chapter) => {
+  const modifiedLanguageChapters = languageChapters.map((chapter) => {
     const groupNames = {};
     chapter.groups.forEach((groupID) => groupNames[groupID] = htmlDecode(groupDictionary[groupID]));
     return { ...chapter, groups: groupNames };
   });
-  return modifiedEnglishChapters;
+  return modifiedLanguageChapters;
 }
 
-export const useMangaData = (id) => {
+export const useMangaData = (id, language) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mangaInfo, setMangaInfo] = useState({});
@@ -32,7 +32,7 @@ export const useMangaData = (id) => {
     const fetchChaptersData = async () => {
       const response = await axios.get(`/api/manga/${id}/chapters`);
       const { chapters, groups } = response.data.data;
-      setChapters(getEnglishChaptersWithGroups(chapters, groups));
+      setChapters(getLanguageChaptersWithGroups(chapters, groups, language));
     };
 
     const fetchData = async () => {
@@ -47,7 +47,7 @@ export const useMangaData = (id) => {
     }
 
     fetchData();
-  }, []);
+  }, [id, language]);
 
   return { isLoading, error, mangaInfo, chapters };
 }

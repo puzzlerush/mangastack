@@ -20,7 +20,7 @@ Currently, the backend is hosted on Heroku free tier, which can sometimes lead t
 - Automatic bookmarks/tracking of reading progress
 - Fast search through MangaDex's catalog
 - No authentication required
-
+- Multiple language support
 <br>
 
 ## Screenshots

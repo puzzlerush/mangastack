@@ -6,7 +6,9 @@ import {
   Switch, InputBase, Box, Tooltip,
   IconButton, Drawer, List, ListItem,
   ListItemIcon, ListItemText, FormControlLabel,
-  Divider, Checkbox
+  Divider, Checkbox, Select, Dialog,
+  DialogTitle, DialogContent, DialogContentText,
+  DialogActions, Button
 } from '@material-ui/core';
 import {
   Menu as MenuIcon,
@@ -16,7 +18,8 @@ import {
   ViewModule as ViewModuleIcon
 } from '@material-ui/icons';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import { setTheme, setNSFW } from '../actions/settings';
+import { setTheme, setNSFW, setLanguage } from '../actions/settings';
+import { deleteAll } from '../actions/mangaList';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,15 +75,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Header = ({ theme, setTheme, nsfw, setNSFW }) => {
+const Header = ({
+  theme, setTheme,
+  nsfw, setNSFW,
+  language, setLanguage,
+  deleteAllMangaListEntries
+}) => {
   const classes = useStyles();
   const [searchInput, setSearchInput] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [languageSelectInput, setLanguageSelectInput] = useState(language);
+  const [dialogOpen, setDialogOpen] = useState(false);
   let history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     history.push(`/search?q=${encodeURIComponent(searchInput)}`)
+  };
+
+  const handleDialogCancel = () => {
+    setDialogOpen(false);
+    setLanguageSelectInput(language);
+  };
+
+  const handleDialogConfirm = () => {
+    setDialogOpen(false);
+    deleteAllMangaListEntries();
+    setLanguage(languageSelectInput);
   };
 
   const sidebarItems = [
@@ -106,7 +127,51 @@ const Header = ({ theme, setTheme, nsfw, setNSFW }) => {
       <ListItemIcon><Icon /></ListItemIcon>
       <ListItemText primary={label} />
     </ListItem>
-  ))
+  ));
+
+  const languageOptions = [
+    {
+      value: 'gb',
+      label: 'English'
+    },
+    {
+      value: 'ru',
+      label: 'Russian'
+    },
+    {
+      value: 'mx',
+      label: 'Spanish'
+    },
+    {
+      value: 'in',
+      label: 'Hindi'
+    },
+    {
+      value: 'fr',
+      label: 'French'
+    },
+    {
+      value: 'br',
+      label: 'Portuguese'
+    },
+    {
+      value: 'it',
+      label: 'Italian'
+    },
+    {
+      value: 'pl',
+      label: 'Polish'
+    },
+  ];
+
+  const languageOptionsToDisplay = languageOptions.map((languageOption) => (
+    <option
+      key={languageOption.value}
+      value={languageOption.value}
+    >
+      {languageOption.label}
+    </option>
+  ));
 
   return (
     <div className={classes.root}>
@@ -193,30 +258,87 @@ const Header = ({ theme, setTheme, nsfw, setNSFW }) => {
           <Typography variant="h6">
             Settings
           </Typography>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={nsfw}
-                onChange={() => setNSFW(!nsfw)}
-                name="include-nsfw-checkbox"
+          <List className={classes.sidebarList}>
+            <ListItem>
+              <FormControlLabel
+                control={
+                  <Select
+                    native
+                    value={languageSelectInput}
+                    onChange={(e) => {
+                      setDialogOpen(true);
+                      setLanguageSelectInput(e.target.value);
+                    }}
+                    inputProps={{
+                      name: 'language',
+                      id: 'language-select'
+                    }}
+                    style={{ marginRight: 10 }}
+                    fullWidth
+                  >
+                    {languageOptionsToDisplay}
+                  </Select>
+                }
+                label="Language"
+                style={{
+                  margin: 0
+                }}
               />
-            }
-            label="Include NSFW results"
-          />
+            </ListItem>
+            <ListItem>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={nsfw}
+                    onChange={() => setNSFW(!nsfw)}
+                    name="include-nsfw-checkbox"
+                  />
+                }
+                label="Include NSFW results"
+              />
+            </ListItem>
+          </List>
         </Box>
       </Drawer>
+      <Dialog
+        open={dialogOpen}
+        onClose={handleDialogCancel}
+        aria-labelledby="change-language-warning-title"
+        aria-describedby="change-language-warning-description"
+      >
+        <DialogTitle id="change-language-warning-title">
+          Are you sure?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="change-language-warning-description">
+            Changing the default language will result in all of your bookmarks being removed.
+            Are you sure you want to proceed?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogCancel}>
+            No
+          </Button>
+          <Button onClick={handleDialogConfirm}>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
   theme: state.settings.theme,
-  nsfw: state.settings.nsfw
+  nsfw: state.settings.nsfw,
+  language: state.settings.language
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setTheme: (theme) => dispatch(setTheme(theme)),
-  setNSFW: (nsfw) => dispatch(setNSFW(nsfw))
+  setNSFW: (nsfw) => dispatch(setNSFW(nsfw)),
+  setLanguage: (language) => dispatch(setLanguage(language)),
+  deleteAllMangaListEntries: () => dispatch(deleteAll())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
