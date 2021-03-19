@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { usePrevious } from './common';
 import axios from '../config/axios';
 
-const shallowIsEqual = (a, b) => {
+export const shallowIsEqual = (a, b) => {
   for (const key in { ...a, ...b }) {
     if (a[key] !== b[key]) {
       return false;

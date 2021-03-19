@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Rating } from '@material-ui/lab';
 import { htmlDecode } from '../utils/utils';
 
-const getShortText = (description, cutoff) => {
+export const getShortText = (description, cutoff) => {
   const split = htmlDecode(description).replace(/\[.*?\]/g, '');
   if (split.length <= cutoff) {
     return split;
@@ -16,7 +16,7 @@ const getShortText = (description, cutoff) => {
   }
 };
 
-const getShortAuthors = (author, artist) => {
+export const getShortAuthors = (author, artist) => {
   const cutoff = 30
   const authors = htmlDecode(Array.from(new Set(author.concat(artist))).join(', '));
   if (authors.length <= cutoff) {
