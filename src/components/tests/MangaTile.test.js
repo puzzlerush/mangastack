@@ -1,17 +1,25 @@
-import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { render, cleanup, screen } from '@testing-library/react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import { render, cleanup, screen, fireEvent } from '@testing-library/react';
 import MangaTile, { getShortText, getShortAuthors } from '../MangaTile';
 import topRatedManga from '../../assets/topRatedManga';
 
 let container;
 let mockManga;
 let component;
+let testLocation;
+
 beforeEach(() => {
   mockManga = topRatedManga[0];
   component = (
-    <MemoryRouter>
+    <MemoryRouter initialEntries={['/']}>
       <MangaTile {...mockManga} />
+      <Route 
+        path="*"
+        render={({ location }) => {
+          testLocation = location;
+          return null;
+        }}
+      />
     </MemoryRouter>
   );
   container = render(component).container;
@@ -42,3 +50,14 @@ it('displays cover image', () => {
   expect(image.getAttribute('src')).toBe(mockManga.mainCover);
 });
 
+it('title links to the manga page', () => {
+  const title = screen.getByText(getShortText(mockManga.title, 50));
+  fireEvent.click(title);
+  expect(testLocation.pathname).toBe(`/manga/${mockManga.id}`);
+});
+
+it('main cover links to the manga page', () => {
+  const image = container.querySelector(`img[title="Cover for ${mockManga.title}"]`);
+  fireEvent.click(image);
+  expect(testLocation.pathname).toBe(`/manga/${mockManga.id}`);
+});

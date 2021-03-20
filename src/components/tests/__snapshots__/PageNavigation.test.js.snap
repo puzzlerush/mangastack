@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render 1`] = `
+<div>
+  <div
+    style="display: flex; align-items: center; margin-bottom: 3em; margin-top: 1em;"
+  >
+    <a
+      aria-disabled="false"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      href="/all?page=1"
+      role="button"
+      style="flex-grow: 1; margin-left: 5px;"
+      tabindex="0"
+    >
+      <span
+        class="MuiButton-label"
+      >
+        Prev
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </a>
+    <span
+      style="flex-grow: 1;"
+    />
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      style="flex-grow: 1;"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiButton-label"
+      >
+        Scroll to Bottom
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+    <span
+      style="flex-grow: 1;"
+    />
+    <a
+      aria-disabled="false"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      href="/all?page=3"
+      role="button"
+      style="flex-grow: 1; margin-right: 5px;"
+      tabindex="0"
+    >
+      <span
+        class="MuiButton-label"
+      >
+        Next
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </a>
+  </div>
+</div>
+`;
