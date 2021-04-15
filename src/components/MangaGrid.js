@@ -1,8 +1,9 @@
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {
   Grid, Typography, Box,
-  Checkbox, FormControlLabel, Select
+  Checkbox, FormControlLabel, TextField
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import PageNavigation from './PageNavigation';
@@ -23,6 +24,15 @@ const useStyles = makeStyles((theme) => ({
 
 const MangaGrid = ({ pageNavURL, page, totalPages, mangaList, nsfw, setNSFW }) => {
   const classes = useStyles();
+  const [pageVal, setPageVal] = useState(page);
+  const [inputFocused, setInputFocused] = useState(false);
+  let history = useHistory();
+
+  useEffect(() => {
+    if (parseInt(pageVal) !== page && inputFocused === false) {
+      history.push(`${pageNavURL}${pageVal}`);
+    } 
+  }, [inputFocused]);
 
   const mangaToDisplay = mangaList.map((manga) => {
     const { id } = manga;
@@ -33,18 +43,6 @@ const MangaGrid = ({ pageNavURL, page, totalPages, mangaList, nsfw, setNSFW }) =
     )
   });
 
-  const pageNavOptions = Object.keys([...Array(totalPages)])
-    .map((key) => parseInt(key) + 1)
-    .map((pageNum) => (
-      <option
-        key={`page-${pageNum}`}
-        value={pageNum}
-      >
-        {pageNum}
-      </option>
-    ));
-
-  let history = useHistory();
   return (
     <Box p={2}>
       <PageNavigation
@@ -64,16 +62,17 @@ const MangaGrid = ({ pageNavURL, page, totalPages, mangaList, nsfw, setNSFW }) =
           }}
         >
           {`Page `}
-          <Select
+          <TextField
             style={{
-              margin: '0 10px'
+              margin: '0 10px',
+              maxWidth: 60,
             }}
-            native
-            value={page}
-            onChange={(e) => history.push(`${pageNavURL}${e.target.value}`)}
-          >
-            {pageNavOptions}
-          </Select>
+            type="number"
+            value={pageVal}
+            onChange={(e) => setPageVal(e.target.value)}
+            onFocus={() => setInputFocused(true)}
+            onBlur={() => setInputFocused(false)}
+          />
           {` of ${totalPages}`}
         </Typography>
         <FormControlLabel
