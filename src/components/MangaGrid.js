@@ -69,7 +69,13 @@ const MangaGrid = ({ pageNavURL, page, totalPages, mangaList, nsfw, setNSFW }) =
             }}
             type="number"
             value={pageVal}
-            onChange={(e) => setPageVal(e.target.value)}
+            onChange={(e) => {
+              const input = e.target.value;
+              if (parseInt(input) < 1 || parseInt(input) > totalPages) {
+                return;
+              }
+              setPageVal(input);
+            }}
             onFocus={() => setInputFocused(true)}
             onBlur={() => setInputFocused(false)}
           />
