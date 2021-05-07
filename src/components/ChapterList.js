@@ -2,10 +2,19 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  Card, CardContent, Typography,
-  List, ListItem, ListItemText,
-  Select, InputLabel, FormControl, TextField,
-  Accordion, AccordionSummary, AccordionDetails
+  Card,
+  CardContent,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Select,
+  InputLabel,
+  FormControl,
+  TextField,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import moment from 'moment';
@@ -19,11 +28,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   selectGroup: {
-    minWidth: 250
+    minWidth: 250,
   },
   list: {
-    width: '100%'
-  }
+    width: '100%',
+  },
 }));
 
 const ChapterList = ({ chapters, selectedChapter }) => {
@@ -44,11 +53,15 @@ const ChapterList = ({ chapters, selectedChapter }) => {
     <option key={groupName} value={groupName}>
       {groupName}
     </option>
-  ))
-
-  const filteredChapters = chapters.filter((chapter) => (
-    (!groupFilter || Object.keys(chapter.groups).includes(chapterGroups[groupFilter]))
   ));
+
+  const filteredChapters = chapters
+    .filter(
+      (chapter) =>
+        !groupFilter ||
+        Object.keys(chapter.groups).includes(chapterGroups[groupFilter])
+    )
+    .sort((a, b) => parseInt(b.chapter) - parseInt(a.chapter));
 
   const sortedChapters = [...filteredChapters];
   if (sortBy === 'ascending') {
@@ -69,8 +82,10 @@ const ChapterList = ({ chapters, selectedChapter }) => {
       selected={selectedChapter === chapter.id}
     >
       <ListItemText
-        primary={`Chapter ${chapter.chapter} ${chapter.title && ` - ${chapter.title}`}`}
-        secondary={moment(chapter.timestamp * 1000).format('LL')}
+        primary={`Chapter ${chapter.chapter} ${
+          chapter.title && ` - ${chapter.title}`
+        }`}
+        secondary={moment(chapter.publishAt).format('LL')}
       />
       {Object.values(chapter.groups).join(', ')}
     </ListItem>
@@ -87,7 +102,6 @@ const ChapterList = ({ chapters, selectedChapter }) => {
             <Typography variant="subtitle1">See all chapters</Typography>
           </AccordionSummary>
           <AccordionDetails>
-
             <List className={classes.list}>
               <FormControl className={classes.formControl}>
                 <InputLabel htmlFor="sort-by-select">Sort by</InputLabel>
@@ -102,7 +116,9 @@ const ChapterList = ({ chapters, selectedChapter }) => {
                 </Select>
               </FormControl>
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="group-filter-select">Filter by scanlation group</InputLabel>
+                <InputLabel htmlFor="group-filter-select">
+                  Filter by scanlation group
+                </InputLabel>
                 <Select
                   className={classes.selectGroup}
                   native
@@ -120,7 +136,9 @@ const ChapterList = ({ chapters, selectedChapter }) => {
                   label="Chapters to skip"
                   type="number"
                   value={chapterSkip}
-                  onChange={(e) => setChapterSkip(parseInt(e.target.value) || '')}
+                  onChange={(e) =>
+                    setChapterSkip(parseInt(e.target.value) || '')
+                  }
                   InputLabelProps={{
                     shrink: true,
                   }}
