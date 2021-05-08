@@ -9,11 +9,11 @@ export default [
     ],
     "description": "The adventure is over but life goes on for an elf mage just beginning to learn what living is all about. Elf mage Frieren and her courageous fellow adventurers have defeated the Demon King and brought peace to the land. With the great struggle over, they all go their separate ways to live a quiet life. But as an elf, Frieren, nearly immortal, will long outlive the rest of her former party. How will she come to terms with the mortality of her friends? How can she find fulfillment in her own life, and can she learn to understand what life means to the humans around her? Frieren begins a new journey to find the answer.\r\n\r\n[url=https://twitter.com/abetsukasa]Artist's twitter[/url]",
     "views": 2993789,
-    "id": "b0b721ff-c388-4486-aa0f-c2b0bb321512",
+    "id": 48045,
     "rating": {
       "bayesian": "9.40"
     },
-    "mainCover": "https://cdn.myanimelist.net/images/manga/3/232121.jpg"
+    "mainCover": "https://mangadex.org/images/manga/48045.jpg"
   },
   {
     "title": "Jumyou wo Kaitotte Moratta. Ichinen ni Tsuki, Ichimanen de.",
@@ -26,11 +26,11 @@ export default [
     ],
     "description": "A twenty-year-old with little hope for the future discovers a shop that buys lifespan, time, and health. This is a story dealing with the ensuing consequences.\r\n\r\n[b][u]Ukrainian/Українська[/u][/b]\r\n[spoiler]Бідний і голодний 20-річний Кусунокі знаходить магазин, який купляє у людей життя, час або здоров'я. Почувши, що його життя оцінене в мінімальні десять тисяч єн за рік, він продає усе своє життя, лишивши собі три місяці, щоб насолодитися отриманими грошима.[/spoiler]\r\n\r\n[b][u]Russian/Pусский[/u][/b]\r\n[spoiler]Парень, у которого туго с деньгами, узнает про магазин, где можно продать время жизни. Отдав свои года, он в отчаянии приходит к пониманию ценности жизни. \r\nОсновано на новелле &quot;Три дня счастья&quot; от Сугару Мияки.[/spoiler]\r\n[hr][b]Links:[/b]\r\n[*][url=https://yenpress.com/9781975314217/three-days-of-happiness/]Offical English Translation of the Novel[/url]\r\n[*][url=http://vgperson.tumblr.com/post/51261981076/three-days-of-happiness]Original Story[/url]\r\n[*][url=http://vgperson.tumblr.com/post/71910368589/sugaru-miakis-three-days-of-happiness-part-1]Novelization the Manga is Based On[/url]\r\n[*][url=https://www.egmont-manga.de/manga-product/ich-habe-mein-leben-fur-10-000-yen-pro-jahr-verkauft-01/]Official German[/url]",
     "views": 918222,
-    "id": "9e03b2ca-5191-44a6-88b6-c0cd49d06b51",
+    "id": 22440,
     "rating": {
       "bayesian": "9.37"
     },
-    "mainCover": "https://cdn.myanimelist.net/images/manga/3/197880.jpg"
+    "mainCover": "https://mangadex.org/images/manga/22440.jpg"
   },
   {
     "title": "Berserk",
@@ -42,11 +42,11 @@ export default [
     ],
     "description": "Guts, known as the Black Swordsman, seeks sanctuary from the demonic forces attracted to him and his woman because of a demonic mark on their necks, and also vengeance against the man who branded him as an unholy sacrifice. Aided only by his titanic strength gained from a harsh childhood lived with mercenaries, a gigantic sword, and an iron prosthetic left hand, Guts must struggle against his bleak destiny, all the while fighting with a rage that might strip him of his humanity.\r\n\r\n[u][*]Won the Award for Excellence at the sixth installment of Tezuka Osamu Cultural Prize in 2002.[/u]\r\n[b]Links to AnimeNewsNetwork:[/b]\r\nMovies:\r\n[*][url=https://www.animenewsnetwork.com/encyclopedia/anime.php?id=12397]The Golden Age Arc I[/url]\r\n[*][url=https://www.animenewsnetwork.com/encyclopedia/anime.php?id=13799]The Golden Age Arc II[/url]\r\n[*][url=https://www.animenewsnetwork.com/encyclopedia/anime.php?id=13800]The Golden Age Arc III[/url]\r\nAnime (2015):\r\n[*][url=https://www.animenewsnetwork.com/encyclopedia/anime.php?id=328]Season 1[/url]\r\n[*][url=https://www.animenewsnetwork.com/encyclopedia/anime.php?id=18160]Season 2[/url]\r\n[*][url=https://www.animenewsnetwork.com/encyclopedia/anime.php?id=19015]Season 3[/url]\r\n\r\n[url=https://shopee.co.th/berserk%E0%B9%80%E0%B8%9A%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B9%80%E0%B8%8B%E0%B8%B4%E0%B8%A3%E0%B9%8C%E0%B8%81-%E0%B8%9A%E0%B8%B4%E0%B9%8A%E0%B8%81%E0%B8%9A%E0%B8%B8%E0%B8%84-%E0%B9%81%E0%B8%A2%E0%B8%81%E0%B9%80%E0%B8%A5%E0%B9%88%E0%B8%A1-1-20-%E0%B9%83%E0%B8%AB%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%B7%E0%B8%AD%E0%B8%AB%E0%B8%99%E0%B8%B6%E0%B9%88%E0%B8%87-i.63434898.1855330863] Official Thai [/url]",
     "views": 2433186,
-    "id": "801513ba-a712-498c-8f57-cae55b38cc92",
+    "id": 607,
     "rating": {
       "bayesian": "9.37"
     },
-    "mainCover": "https://cdn.myanimelist.net/images/manga/1/157931.jpg"
+    "mainCover": "https://mangadex.org/images/manga/607.jpg"
   },
   {
     "title": "Blue Period",
@@ -58,11 +58,11 @@ export default [
     ],
     "description": "In his second to last year of high school, the dispassionate but studious, Yatora Yaguchi finally finds a calling in art. With no prior art experience, he decides to work towards applying to an art university.  A decision with potentially disastrous results.\r\n[hr][u][b]Russian / Русский:[/b][/u]\r\n[spoiler]Можно ли увлечься чем-то настолько, что ради этого вдруг решишь свернуть с намеченного ранее жизненного пути? Если вдруг поймешь, что выбранная до этого дорога, хоть и сулила благополучие в будущем, но не отражала истинного желания?\r\nС виду безалаберный Ятора Ягути на удивление своих друзей-разгильдяев преуспел в учёбе и по окончании школы мог поступить почти в любой университет. Однако сам парень большой радости от этого не испытывал. Велика задача &mdash; подтянуть предметы, нужно только приложить немного больше усилий, чем остальные. Скучно. Да и по мнению парня, гордиться тут нечем...\r\nЖгучая потребность в самореализации и отсутствие очевидного способа самовыражения так и довлели бы над Яторой, если бы однажды вечером пагубная привычка не привела его в школьный клуб изобразительного искусства. Увидев там картину Мори, он решает попробовать запечатлеть на холсте приглянувшийся ему городской пейзаж. Неумелая, нелепая, но старательно написанная картина всё же достигает сердец некоторых людей, и парень понимает, что таким образом, через искусство, может по-настоящему общаться с другими.\r\nТак стоит ли ради этого сворачивать с намеченного пути, даже если, вполне возможно, эта другая дорога в конце концов приведёт к пропасти?[/spoiler]\r\n[hr][b]Links:[/b]\r\n[*][url=https://twitter.com/28_3][img]https://i.imgur.com/dQCXZkU.png[/img] Artist&rsquo;s Twitter[/url]\r\n[*][url=https://www.pixiv.net/member.php?id=200342][img]https://i.imgur.com/oiVINmy.png[/img] Artist&rsquo;s Pixiv[/url]\r\n\r\nWinner of the 13th Manga Taisho Award in 2020.\r\nWinner of the 44th Kodansha Manga Awards for best general manga in 2020.\r\n\r\n[*][url=https://twitter.com/blueperiod_pr/status/1351363755209179139?s=21]Anime (Announcement)[/url]",
     "views": 735044,
-    "id": "f8e294c0-7c11-4c66-bdd7-4e25df52bf69",
+    "id": 34327,
     "rating": {
       "bayesian": "9.36"
     },
-    "mainCover": "https://cdn.myanimelist.net/images/manga/2/204827.jpg"
+    "mainCover": "https://mangadex.org/images/manga/34327.jpg"
   },
   {
     "title": "The Horizon",
