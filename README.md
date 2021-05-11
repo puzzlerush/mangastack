@@ -46,8 +46,6 @@ Currently being reworked to use MangaDex's [new V5 API](https://api.mangadex.org
 
 ## MangaDex Search API
 
-Uses the https://mangadb-search.herokuapp.com/mangadb/search API endpoint to allow for fast search of all of MangaDex's titles, without the need for authentication. More details on this will be coming later, but for now, here's an example:
+Uses the https://mangadb-search.herokuapp.com/mangadb/search API endpoint to allow for fast search of all of MangaDex's titles, without the need for authentication.
 
-```
-https://mangastack.cf/mangadb/search?q=one+piece&nsfw=false&limit=12&skip=0
-```
+Go to the [mangadb repo](https://github.com/tacticaltofu/mangadb) for more info.
