@@ -6,7 +6,7 @@ import { htmlDecode } from '../utils/utils';
 export const getLanguageChaptersWithGroups = (
   chapters,
   groups,
-  language = 'gb'
+  language = 'en'
 ) => {
   const languageChapters = chapters.filter(
     (chapter) => chapter.language === language
@@ -77,6 +77,44 @@ const mangaToV2 = async ({
   };
 };
 
+const chaptersToV2 = (chapters, mangaId) => {
+  return chapters.map(
+    ({
+      data: {
+        id,
+        attributes: {
+          chapter,
+          title,
+          translatedLanguage: language,
+          hash,
+          data,
+          dataSaver,
+          createdAt,
+        },
+      },
+      relationships,
+    }) => {
+      const timestamp = new Date(createdAt).getTime() / 1000;
+      const groups = relationships
+        .filter(({ type }) => type === 'scanlation_group')
+        .map(({ id }) => id);
+      return {
+        groups: {
+          1: 'Underlord',
+          2: 'Tomato',
+        },
+        hash,
+        id,
+        mangaId,
+        chapter,
+        title,
+        timestamp,
+        groups,
+      };
+    }
+  );
+};
+
 export const useMangaData = (id, language) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -90,17 +128,79 @@ export const useMangaData = (id, language) => {
       setMangaInfo(mangaObj);
     };
 
-    // const fetchChaptersData = async () => {
-    //   const response = await axios.get(`/api/manga/${id}/chapters`);
-    //   const { chapters, groups } = response.data.data;
-    //   setChapters(getLanguageChaptersWithGroups(chapters, groups, language));
-    // };
+    const fetchChaptersData = async () => {
+      const response = await axios.get(`/api/manga/${id}/feed`, {
+        params: {
+          order: {
+            chapter: 'desc',
+          },
+          limit: 500,
+          locales: [language],
+        },
+        paramsSerializer: (params) => {
+          return qs.stringify(params);
+        },
+      });
+      const { results: chapters } = response.data;
+
+      const chaptersWithoutGroupNames = chaptersToV2(chapters, id);
+
+      const groupList = Array.from(
+        new Set(
+          chaptersWithoutGroupNames.reduce(
+            (acc, { groups }) => acc.concat(groups),
+            []
+          )
+        )
+      );
+
+      const groupsMapping = {};
+
+      const {
+        data: { results },
+      } = await axios.get('/api/group', {
+        params: {
+          ids: groupList,
+        },
+        paramsSerializer: (params) => {
+          return qs.stringify(params);
+        },
+      });
+
+      results.forEach(
+        ({
+          data: {
+            id,
+            attributes: { name },
+          },
+        }) => {
+          groupsMapping[id] = name;
+        }
+      );
+
+      const chaptersWithGroupNames = chaptersWithoutGroupNames.map(
+        (chapter) => {
+          const groups = {};
+          chapter.groups.forEach((id) => {
+            groups[id] = groupsMapping[id];
+          });
+          return {
+            ...chapter,
+            groups,
+          };
+        }
+      );
+
+      console.log(chaptersWithGroupNames);
+
+      setChapters(chaptersWithGroupNames);
+    };
 
     const fetchData = async () => {
       setIsLoading(true);
       try {
         await fetchMangaData();
-        // await fetchChaptersData();
+        await fetchChaptersData();
       } catch (e) {
         console.log(e);
         setError('Could not fetch data from MangaDex API');

@@ -1,34 +1,34 @@
 export default [
   {
-    value: 'gb',
-    label: 'English'
+    value: 'en',
+    label: 'English',
   },
   {
     value: 'ru',
-    label: 'Russian'
+    label: 'Russian',
   },
   {
     value: 'mx',
-    label: 'Spanish'
+    label: 'Spanish',
   },
   {
     value: 'in',
-    label: 'Hindi'
+    label: 'Hindi',
   },
   {
     value: 'fr',
-    label: 'French'
+    label: 'French',
   },
   {
     value: 'br',
-    label: 'Portuguese'
+    label: 'Portuguese',
   },
   {
     value: 'it',
-    label: 'Italian'
+    label: 'Italian',
   },
   {
     value: 'pl',
-    label: 'Polish'
+    label: 'Polish',
   },
 ];

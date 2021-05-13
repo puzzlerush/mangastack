@@ -2,16 +2,22 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
 import {
-  Grid, Card, CardContent,
-  CardMedia, Typography, Divider,
-  Accordion, AccordionSummary, AccordionDetails,
-  Button
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Button,
 } from '@material-ui/core';
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons';
 import { Alert, AlertTitle, Rating } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
 import { Helmet } from 'react-helmet';
-import Loader from './Loader'
+import Loader from './Loader';
 import ChapterList from './ChapterList';
 import { useMangaData } from '../hooks/mangadex-api';
 import { htmlDecode, generateMetaKeywordsTitle } from '../utils/utils';
@@ -20,7 +26,7 @@ import languageOptions from '../assets/languageOptions';
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
-    minHeight: 600
+    minHeight: 600,
   },
   details: {
     display: 'flex',
@@ -28,20 +34,20 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flex: '1 0 auto',
-    maxWidth: 700
+    maxWidth: 700,
   },
   cover: {
     [theme.breakpoints.only('xs')]: {
-      width: 0
+      width: 0,
     },
     [theme.breakpoints.only('sm')]: {
-      width: 200
+      width: 200,
     },
-    width: 450
+    width: 450,
   },
   accordion: {
-    maxWidth: '100%'
-  }
+    maxWidth: '100%',
+  },
 }));
 
 const MangaPage = ({ language, userMangaList }) => {
@@ -61,7 +67,9 @@ const MangaPage = ({ language, userMangaList }) => {
       </Alert>
     );
   } else {
-    const userLastReadChapter = userMangaList.find(({ mangaInfo }) => mangaInfo.id === id);
+    const userLastReadChapter = userMangaList.find(
+      ({ mangaInfo }) => mangaInfo.id === id
+    );
     const userIsReading = !!userLastReadChapter;
     return (
       <>
@@ -76,12 +84,7 @@ const MangaPage = ({ language, userMangaList }) => {
             content={generateMetaKeywordsTitle(mangaInfo.title)}
           />
         </Helmet>
-        <Grid
-          container
-          direction="column"
-          justify="center"
-          alignItems="center"
-        >
+        <Grid container direction="column" justify="center" alignItems="center">
           <Grid item xs="auto" sm={1} md={2} />
           <Grid item xs={12} sm={10} md={8}>
             <Card className={classes.root} elevation={10}>
@@ -95,19 +98,32 @@ const MangaPage = ({ language, userMangaList }) => {
               <div className={classes.details}>
                 <CardContent className={classes.content}>
                   <Typography variant="h5">{mangaInfo.title}</Typography>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Rating value={mangaInfo.rating.bayesian / 2} precision={0.5} readOnly />
-                    <Typography style={{ display: 'inline' }}>{mangaInfo.views.toLocaleString()} views</Typography>
+                  <div
+                    style={{ display: 'flex', justifyContent: 'space-between' }}
+                  >
+                    <Rating
+                      value={mangaInfo.rating.bayesian / 2}
+                      precision={0.5}
+                      readOnly
+                    />
+                    <Typography style={{ display: 'inline' }}>
+                      {mangaInfo.views.toLocaleString()} views
+                    </Typography>
                   </div>
                   <Divider />
                   <br />
-                  <Typography variant="subtitle1">{chapters.length} {chapters.length === 1 ? 'chapter' : 'chapters'}</Typography>
+                  <Typography variant="subtitle1">
+                    {chapters.length}{' '}
+                    {chapters.length === 1 ? 'chapter' : 'chapters'}
+                  </Typography>
                   <br />
                   <Typography variant="subtitle1">
-                    {mangaInfo.author && `Written by ${mangaInfo.author.join(', ')}`}
+                    {mangaInfo.author &&
+                      `Written by ${mangaInfo.author.join(', ')}`}
                   </Typography>
                   <Typography variant="subtitle1">
-                    {mangaInfo.artist && `Illustrated by ${mangaInfo.artist.join(', ')}`}
+                    {mangaInfo.artist &&
+                      `Illustrated by ${mangaInfo.artist.join(', ')}`}
                   </Typography>
                   <p style={{ margin: '1em 0' }}>
                     {userIsReading ? (
@@ -120,17 +136,19 @@ const MangaPage = ({ language, userMangaList }) => {
                         Continue reading
                       </Button>
                     ) : (
-                        chapters.length > 0 && (
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            component={Link}
-                            to={`/manga/${id}/chapter/${chapters[chapters.length - 1].id}`}
-                          >
-                            Start reading
-                          </Button>
-                        )
-                      )}
+                      chapters.length > 0 && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          component={Link}
+                          to={`/manga/${id}/chapter/${
+                            chapters[chapters.length - 1].id
+                          }`}
+                        >
+                          Start reading
+                        </Button>
+                      )
+                    )}
                   </p>
                   <Accordion className={classes.accordion} defaultExpanded>
                     <AccordionSummary
@@ -142,7 +160,9 @@ const MangaPage = ({ language, userMangaList }) => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography>
-                        {mangaInfo.description ? mangaInfo.description.split(/\[.+?\]/)[0] : 'No synopsis available.'}
+                        {mangaInfo.description
+                          ? mangaInfo.description.split(/\[.+?\]/)[0]
+                          : 'No synopsis available.'}
                       </Typography>
                     </AccordionDetails>
                   </Accordion>
@@ -165,16 +185,16 @@ const MangaPage = ({ language, userMangaList }) => {
 };
 
 MangaPage.propTypes = {
-  language: PropTypes.oneOf(languageOptions.map((language) => language.value))
+  language: PropTypes.oneOf(languageOptions.map((language) => language.value)),
 };
 
 MangaPage.defaultProps = {
-  language: 'gb'
+  language: 'en',
 };
 
 const mapStateToProps = (state) => ({
   language: state.settings.language,
-  userMangaList: state.mangaList
+  userMangaList: state.mangaList,
 });
 
 export default connect(mapStateToProps)(MangaPage);

@@ -1,8 +1,8 @@
 const defaultSettingsState = {
   theme: 'light',
-  language: 'gb',
+  language: 'en',
   nsfw: false,
-}; 
+};
 
 const settingsReducer = (state = defaultSettingsState, action) => {
   switch (action.type) {
