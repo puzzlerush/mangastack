@@ -130,7 +130,6 @@ export const useMangaData = (id) => {
       try {
         await fetchMangaData();
       } catch (e) {
-        console.log(e);
         setError('Could not fetch manga info from MangaDex API');
       }
       setIsLoading(false);
@@ -229,8 +228,6 @@ export const useChapters = (id, language, limit, offset) => {
         }
       );
 
-      console.log(chaptersWithGroupNames);
-
       setChapters(chaptersWithGroupNames);
     };
     const fetchData = async () => {
@@ -238,7 +235,6 @@ export const useChapters = (id, language, limit, offset) => {
       try {
         await fetchChaptersData();
       } catch (e) {
-        console.log(e);
         setError('Could not fetch chapters data from MangaDex API');
       }
       setIsLoading(false);

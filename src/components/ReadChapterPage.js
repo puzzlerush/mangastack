@@ -79,9 +79,9 @@ const ReadChapterPage = ({ language, setReading }) => {
     const fetchPages = async (currentChapter) => {
       const response = await axios.get(`/api/at-home/server/${chapterId}`);
       const { baseUrl } = response.data;
-      const { data: pages } = currentChapter;
+      const { dataSaver: pages } = currentChapter;
       const pageURLs = pages.map(
-        (page) => `${baseUrl}/data/${currentChapter.hash}/${page}`
+        (page) => `${baseUrl}/data-saver/${currentChapter.hash}/${page}`
       );
       setChapterPages(pageURLs);
       setImagesLoaded(0);
@@ -96,7 +96,6 @@ const ReadChapterPage = ({ language, setReading }) => {
         const currentChapter = fetchChapterInfo();
         await fetchPages(currentChapter);
       } catch (e) {
-        console.log(e);
         setError(
           `An error occured while fetching the chapter data.\nPlease make sure the IDs in the URL point to valid resources.`
         );
@@ -106,7 +105,7 @@ const ReadChapterPage = ({ language, setReading }) => {
     if (!mangaLoading && !chaptersLoading) {
       fetchData();
     }
-  }, [chapterId, chaptersLoading]);
+  }, [mangaLoading, chaptersLoading]);
 
   const imagesLoading = !(
     chapterPages.length > 0 && imagesLoaded >= chapterPages.length

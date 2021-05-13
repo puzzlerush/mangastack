@@ -4,31 +4,31 @@ export default [
     label: 'English',
   },
   {
+    value: 'pt-br',
+    label: 'Brazilian Portuguese',
+  },
+  {
     value: 'ru',
     label: 'Russian',
-  },
-  {
-    value: 'mx',
-    label: 'Spanish',
-  },
-  {
-    value: 'in',
-    label: 'Hindi',
   },
   {
     value: 'fr',
     label: 'French',
   },
   {
-    value: 'br',
-    label: 'Portuguese',
-  },
-  {
-    value: 'it',
-    label: 'Italian',
+    value: 'es-la',
+    label: 'Spanish (Latin America)',
   },
   {
     value: 'pl',
     label: 'Polish',
+  },
+  {
+    value: 'tr',
+    label: 'Turkish',
+  },
+  {
+    value: 'it',
+    label: 'Italian',
   },
 ];
