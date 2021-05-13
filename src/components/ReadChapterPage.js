@@ -19,6 +19,7 @@ import axios from '../config/axios';
 import {
   getLanguageChaptersWithGroups,
   useMangaData,
+  useChapters,
 } from '../hooks/mangadex-api';
 import { setReading } from '../actions/mangaList';
 import { htmlDecode, generateMetaKeywordsTitle } from '../utils/utils';
@@ -29,12 +30,20 @@ const ReadChapterPage = ({ language, setReading }) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [allChapters, setAllChapters] = useState([]);
   const [chapterInfo, setChapterInfo] = useState({});
   const [chapterPages, setChapterPages] = useState([]);
   const [imagesLoaded, setImagesLoaded] = useState(0);
 
-  const { mangaInfo } = useMangaData(mangaId, language);
+  const {
+    isLoading: mangaLoading,
+    error: mangaError,
+    mangaInfo,
+  } = useMangaData(mangaId);
+  const {
+    isLoading: chaptersLoading,
+    error: chaptersError,
+    chapters: allChapters,
+  } = useChapters(mangaId, language, 500, 0);
 
   // If the user changes the language while reading a chapter,
   // redirect them to the Manga page
@@ -49,25 +58,31 @@ const ReadChapterPage = ({ language, setReading }) => {
   }, [language]);
 
   useEffect(() => {
-    const fetchChapterInfo = async () => {
-      const response = await axios.get(`/api/manga/${mangaId}/chapters`);
-      const { chapters, groups } = response.data.data;
-      setAllChapters(getLanguageChaptersWithGroups(chapters, groups, language));
-      const currentChapter = chapters.find(
-        (chapter) => chapter.id === parseInt(chapterId)
+    const fetchChapterInfo = () => {
+      const currentChapter = allChapters.find(
+        (chapter) => chapter.id === chapterId
       );
       if (!currentChapter) {
         throw new Error();
       }
-      setChapterInfo(currentChapter);
-      setReading({ id: mangaId }, currentChapter);
-      return currentChapter.hash;
+
+      const currentChapterWithManga = {
+        ...currentChapter,
+        mangaTitle: mangaInfo.title,
+      };
+
+      setChapterInfo(currentChapterWithManga);
+      setReading({ id: mangaId }, currentChapterWithManga);
+      return currentChapter;
     };
 
-    const fetchPages = async (hash) => {
-      const response = await axios.get(`/api/chapter/${hash}`);
-      const { pages, server } = response.data.data;
-      const pageURLs = pages.map((page) => `${server}${hash}/${page}`);
+    const fetchPages = async (currentChapter) => {
+      const response = await axios.get(`/api/at-home/server/${chapterId}`);
+      const { baseUrl } = response.data;
+      const { data: pages } = currentChapter;
+      const pageURLs = pages.map(
+        (page) => `${baseUrl}/data/${currentChapter.hash}/${page}`
+      );
       setChapterPages(pageURLs);
       setImagesLoaded(0);
       setTimeout(() => {
@@ -78,17 +93,20 @@ const ReadChapterPage = ({ language, setReading }) => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const chapterHash = await fetchChapterInfo();
-        await fetchPages(chapterHash);
+        const currentChapter = fetchChapterInfo();
+        await fetchPages(currentChapter);
       } catch (e) {
+        console.log(e);
         setError(
           `An error occured while fetching the chapter data.\nPlease make sure the IDs in the URL point to valid resources.`
         );
       }
       setIsLoading(false);
     };
-    fetchData();
-  }, [chapterId]);
+    if (!mangaLoading && !chaptersLoading) {
+      fetchData();
+    }
+  }, [chapterId, chaptersLoading]);
 
   const imagesLoading = !(
     chapterPages.length > 0 && imagesLoaded >= chapterPages.length
@@ -123,8 +141,9 @@ const ReadChapterPage = ({ language, setReading }) => {
       mangaTitle,
       chapter: chapterNumber,
       title,
-      groups,
+      groups: groupsMapping,
     } = chapterInfo;
+    const groups = Object.keys(groupsMapping);
     let prevChapter, nextChapter, scanlatorNames;
     if (allChapters) {
       const index = allChapters.findIndex(

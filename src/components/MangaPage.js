@@ -19,7 +19,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Helmet } from 'react-helmet';
 import Loader from './Loader';
 import ChapterList from './ChapterList';
-import { useMangaData } from '../hooks/mangadex-api';
+import { useMangaData, useChapters } from '../hooks/mangadex-api';
 import { htmlDecode, generateMetaKeywordsTitle } from '../utils/utils';
 import languageOptions from '../assets/languageOptions';
 
@@ -55,8 +55,19 @@ const MangaPage = ({ language, userMangaList }) => {
 
   const { id } = useParams();
 
-  const { isLoading, error, mangaInfo, chapters } = useMangaData(id, language);
+  const {
+    isLoading: mangaLoading,
+    error: mangaError,
+    mangaInfo,
+  } = useMangaData(id);
+  const {
+    isLoading: chaptersLoading,
+    error: chaptersError,
+    chapters,
+  } = useChapters(id, language, 500, 0);
 
+  const isLoading = mangaLoading || chaptersLoading;
+  const error = mangaError || chaptersError;
   if (isLoading) {
     return <Loader />;
   } else if (error) {
