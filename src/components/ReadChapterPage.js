@@ -105,7 +105,7 @@ const ReadChapterPage = ({ language, setReading }) => {
     if (!mangaLoading && !chaptersLoading) {
       fetchData();
     }
-  }, [mangaLoading, chaptersLoading]);
+  }, [chapterId, mangaLoading, chaptersLoading]);
 
   const imagesLoading = !(
     chapterPages.length > 0 && imagesLoaded >= chapterPages.length
