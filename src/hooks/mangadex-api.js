@@ -105,7 +105,7 @@ const chaptersToV2 = (chapters, mangaId) => {
         id,
         mangaId,
         chapter,
-        title,
+        title: htmlDecode(title),
         timestamp,
         groups,
       };
@@ -211,7 +211,7 @@ export const useChapters = (id, language, limit, offset) => {
             attributes: { name },
           },
         }) => {
-          groupsMapping[id] = name;
+          groupsMapping[id] = htmlDecode(name);
         }
       );
 
