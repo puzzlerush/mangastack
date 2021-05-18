@@ -29,6 +29,7 @@ const mangaToV2 = async ({
     attributes: {
       title: { en: title },
       description: { en: description },
+      links: { mal },
     },
   },
   relationships,
@@ -40,7 +41,9 @@ const mangaToV2 = async ({
     .filter(({ type }) => type === 'artist')
     .map(({ id }) => id);
 
-  const response = await axios.get('/api/author', {
+  const coverRequest = axios.get(`https://api.jikan.moe/v3/manga/${mal}`);
+
+  const authorsRequest = axios.get('/api/author', {
     params: {
       ids: Array.from(new Set(authorIds.concat(artistIds))),
     },
@@ -49,8 +52,13 @@ const mangaToV2 = async ({
     },
   });
 
+  const [coverResponse, authorsResponse] = await Promise.all([
+    coverRequest,
+    authorsRequest,
+  ]);
+
   const authorsMapping = {};
-  response.data.results.forEach(
+  authorsResponse.data.results.forEach(
     ({
       data: {
         id,
@@ -68,8 +76,7 @@ const mangaToV2 = async ({
     id,
     title: htmlDecode(title),
     description: htmlDecode(description),
-    mainCover:
-      'https://static.wikia.nocookie.net/chainsaw-man/images/8/8b/Volume_10.jpg',
+    mainCover: coverResponse.data.image_url,
     rating: { bayesian: 0 },
     views: 0,
     author,
