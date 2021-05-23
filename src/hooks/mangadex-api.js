@@ -163,7 +163,7 @@ export const useChapters = (id, language, limit, offset) => {
             },
             limit,
             offset,
-            locales: [language],
+            translatedLanguage: [language],
           },
           paramsSerializer: (params) => {
             return qs.stringify(params);
