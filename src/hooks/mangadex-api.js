@@ -41,7 +41,17 @@ const mangaToV2 = async ({
     .filter(({ type }) => type === 'artist')
     .map(({ id }) => id);
 
-  const coverRequest = axios.get(`https://api.jikan.moe/v3/manga/${mal}`);
+  let coverRequest = new Promise((resolve, reject) => {
+    resolve({
+      data: {
+        image_url:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png',
+      },
+    });
+  });
+  if (mal) {
+    coverRequest = axios.get(`https://api.jikan.moe/v3/manga/${mal}`);
+  }
 
   const authorsRequest = axios.get('/api/author', {
     params: {
