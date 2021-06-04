@@ -83,7 +83,20 @@ const ReadChapterPage = ({ language, setReading }) => {
       const pageURLs = pages.map(
         (page) => `${baseUrl}/data-saver/${currentChapter.hash}/${page}`
       );
-      setChapterPages(pageURLs);
+
+      const imageBuffers = await Promise.all(
+        pageURLs.map((url) =>
+          axios
+            .get(`/mdh/${url}`, {
+              responseType: 'arraybuffer',
+            })
+            .then((response) =>
+              Buffer.from(response.data, 'binary').toString('base64')
+            )
+        )
+      );
+
+      setChapterPages(imageBuffers);
       setImagesLoaded(0);
       setTimeout(() => {
         setImagesLoaded(pageURLs.length);
@@ -118,7 +131,7 @@ const ReadChapterPage = ({ language, setReading }) => {
           width: '100%',
           display: imagesLoading ? 'none' : 'block',
         }}
-        src={chapterPage}
+        src={`data:image/jpg;base64, ${chapterPage}`}
         alt={`Error loading page ${index + 1}`}
         onLoad={() => setImagesLoaded(imagesLoaded + 1)}
       />

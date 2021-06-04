@@ -11,6 +11,12 @@
     force = true
 
   [[redirects]]
+    from = "/mdh/*"
+    to = ":splat"
+    status = 200
+    force = true
+
+  [[redirects]]
     from = "/mangadb/*"
     to = "https://mangadb-search.herokuapp.com/mangadb/:splat"
     status = 200
