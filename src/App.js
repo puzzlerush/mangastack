@@ -16,11 +16,7 @@ function App({ theme }) {
             </Typography>
             <Typography paragraph variant="subtitle1" align="center">
               Unfortunately, it has been brought to my attention that this site
-              has been causing DMCA issues for{' '}
-              <Link href="https://api.mangadex.org/docs.html#section/Reading-a-chapter-using-the-API/Retrieving-pages-from-the-MangaDex@Home-network">
-                MangaDex@Home
-              </Link>{' '}
-              clients.
+              has been causing DMCA issues for MangaDex.
             </Typography>
             <Typography paragraph variant="subtitle1" align="center">
               Therefore, I have decided to temporarily shut down{' '}
