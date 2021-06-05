@@ -76,30 +76,13 @@ const ReadChapterPage = ({ language, setReading }) => {
       return currentChapter;
     };
 
-    const fetchPages = async (currentChapter) => {
-      const response = await axios.get(`/api/at-home/server/${chapterId}`);
-      const { baseUrl } = response.data;
-      const { dataSaver: pages } = currentChapter;
-      const pageURLs = pages.map(
-        (page) => `${baseUrl}/data-saver/${currentChapter.hash}/${page}`
-      );
-
-      const imageBuffers = await Promise.all(
-        pageURLs.map((url) =>
-          axios
-            .get(`/mdh/${url}`, {
-              responseType: 'arraybuffer',
-            })
-            .then((response) =>
-              Buffer.from(response.data, 'binary').toString('base64')
-            )
-        )
-      );
-
+    const fetchPages = async () => {
+      const response = await axios.get(`/mdh/${chapterId}`);
+      const imageBuffers = response.data;
       setChapterPages(imageBuffers);
       setImagesLoaded(0);
       setTimeout(() => {
-        setImagesLoaded(pageURLs.length);
+        setImagesLoaded(imageBuffers.length);
       }, 10000);
     };
 
@@ -107,7 +90,7 @@ const ReadChapterPage = ({ language, setReading }) => {
       setIsLoading(true);
       try {
         const currentChapter = fetchChapterInfo();
-        await fetchPages(currentChapter);
+        await fetchPages();
       } catch (e) {
         setError(
           `An error occured while fetching the chapter data.\nPlease make sure the IDs in the URL point to valid resources.`
