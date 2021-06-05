@@ -26,6 +26,7 @@ import {
   DialogContentText,
   DialogActions,
   Button,
+  Link as MuiLink,
 } from '@material-ui/core';
 import {
   Menu as MenuIcon,
@@ -280,6 +281,22 @@ const Header = ({
               />
             </ListItem>
           </List>
+        </Box>
+        <Divider />
+        <Box p={2}>
+          <ListItem>
+            <MuiLink href="mailto:mangastack@gmail.com">Contact us</MuiLink>
+          </ListItem>
+          <ListItem>
+            <MuiLink href="https://github.com/tacticaltofu/mangastack/issues">
+              Report a bug
+            </MuiLink>
+          </ListItem>
+          <ListItem>
+            <MuiLink href="https://github.com/tacticaltofu/mangastack">
+              GitHub
+            </MuiLink>
+          </ListItem>
         </Box>
       </Drawer>
       <Dialog
