@@ -8,64 +8,25 @@ export const mangaToV2 = async ({
     attributes: {
       title: { en: title },
       description: { en: description },
-      links: { mal },
     },
   },
   relationships,
 }) => {
-  const authorIds = relationships
+  const author = relationships
     .filter(({ type }) => type === 'author')
-    .map(({ id }) => id);
-  const artistIds = relationships
+    .map(({ name }) => name);
+  const artist = relationships
     .filter(({ type }) => type === 'artist')
-    .map(({ id }) => id);
-
-  let coverRequest = new Promise((resolve, reject) => {
-    resolve({
-      data: {
-        image_url:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png',
-      },
-    });
-  });
-  if (mal) {
-    coverRequest = axios.get(`https://api.jikan.moe/v3/manga/${mal}`);
-  }
-
-  const authorsRequest = axios.get('/api/author', {
-    params: {
-      ids: Array.from(new Set(authorIds.concat(artistIds))),
-    },
-    paramsSerializer: (params) => {
-      return qs.stringify(params);
-    },
-  });
-
-  const [coverResponse, authorsResponse] = await Promise.all([
-    coverRequest,
-    authorsRequest,
-  ]);
-
-  const authorsMapping = {};
-  authorsResponse.data.results.forEach(
-    ({
-      data: {
-        id,
-        attributes: { name },
-      },
-    }) => {
-      authorsMapping[id] = name;
-    }
-  );
-
-  const author = authorIds.map((id) => authorsMapping[id]);
-  const artist = artistIds.map((id) => authorsMapping[id]);
-
+    .map(({ name }) => name);
+  const {
+    attributes: { fileName },
+  } = relationships.find(({ type }) => type === 'cover_art');
+  const mainCover = `https://uploads.mangadex.org/covers/${id}/${fileName}`;
   return {
     id,
     title: htmlDecode(title),
     description: htmlDecode(description),
-    mainCover: coverResponse.data.image_url,
+    mainCover,
     rating: { bayesian: 0 },
     views: 0,
     author,
@@ -91,9 +52,13 @@ export const chaptersToV2 = (chapters, mangaId) => {
       relationships,
     }) => {
       const timestamp = new Date(createdAt).getTime() / 1000;
-      const groups = relationships
+      const groupsList = relationships
         .filter(({ type }) => type === 'scanlation_group')
-        .map(({ id }) => id);
+        .map(({ id, attributes: { name } }) => ({ id, name }));
+      const groupsMap = {};
+      groupsList.forEach(({ id, name }) => {
+        groupsMap[id] = name;
+      });
       return {
         hash,
         data,
@@ -103,7 +68,7 @@ export const chaptersToV2 = (chapters, mangaId) => {
         chapter,
         title: htmlDecode(title),
         timestamp,
-        groups,
+        groups: groupsMap,
       };
     }
   );

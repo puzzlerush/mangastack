@@ -31,7 +31,14 @@ export const useMangaData = (id) => {
 
   useEffect(() => {
     const fetchMangaData = async () => {
-      const response = await axios.get(`/api/manga/${id}`);
+      const response = await axios.get(`/api/manga/${id}`, {
+        params: {
+          includes: ['author', 'artist', 'cover_art'],
+        },
+        paramsSerializer: (params) => {
+          return qs.stringify(params);
+        },
+      });
       const mangaObj = await mangaToV2(response.data);
       setMangaInfo(mangaObj);
     };
@@ -62,6 +69,7 @@ export const useChapters = (id, language, limit, offset) => {
       const getFeed = (limit, offset) => {
         return axios.get(`/api/manga/${id}/feed`, {
           params: {
+            includes: ['scanlation_group'],
             order: {
               chapter: 'desc',
             },
@@ -91,53 +99,7 @@ export const useChapters = (id, language, limit, offset) => {
         allChapters = allChapters.concat(nextFeedResponse.data.results);
       }
 
-      const chaptersWithoutGroupNames = chaptersToV2(allChapters, id);
-
-      const groupList = Array.from(
-        new Set(
-          chaptersWithoutGroupNames.reduce(
-            (acc, { groups }) => acc.concat(groups),
-            []
-          )
-        )
-      );
-
-      const groupsMapping = {};
-
-      const {
-        data: { results },
-      } = await axios.get('/api/group', {
-        params: {
-          ids: groupList,
-        },
-        paramsSerializer: (params) => {
-          return qs.stringify(params);
-        },
-      });
-
-      results.forEach(
-        ({
-          data: {
-            id,
-            attributes: { name },
-          },
-        }) => {
-          groupsMapping[id] = htmlDecode(name);
-        }
-      );
-
-      const chaptersWithGroupNames = chaptersWithoutGroupNames.map(
-        (chapter) => {
-          const groups = {};
-          chapter.groups.forEach((id) => {
-            groups[id] = groupsMapping[id];
-          });
-          return {
-            ...chapter,
-            groups,
-          };
-        }
-      );
+      const chaptersWithGroupNames = chaptersToV2(allChapters, id);
 
       setChapters(chaptersWithGroupNames);
     };
