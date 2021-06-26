@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import qs from 'qs';
 import { usePrevious } from './common';
 import axios from '../config/axios';
 
@@ -22,9 +23,42 @@ export const useResults = (endpoint, params) => {
       setIsLoading(true);
       try {
         const response = await axios.get(endpoint, { params });
-        setResults(response.data.results);
+        const mangaIds = response.data.results.map(({ id }) => id);
+
+        const coverMap = {};
+        try {
+          const mangadexResponse = await axios.get('/api/manga', {
+            params: {
+              ids: mangaIds,
+              includes: ['cover_art'],
+              limit: 12,
+            },
+            paramsSerializer: (params) => {
+              return qs.stringify(params);
+            },
+          });
+          const mangaCovers = mangadexResponse.data.results.map(
+            ({ data: { id }, relationships }) => ({
+              ...relationships.find(({ type }) => type === 'cover_art'),
+              mangaId: id,
+            })
+          );
+
+          mangaCovers.forEach(({ mangaId, attributes: { fileName } }) => {
+            coverMap[
+              mangaId
+            ] = `https://uploads.mangadex.org/covers/${mangaId}/${fileName}.512.jpg`;
+          });
+        } catch (e) {}
+
+        setResults(
+          response.data.results.map((result) => ({
+            ...result,
+            mainCover: coverMap[result.id] || '',
+          }))
+        );
         setCount(response.data.count);
-      } catch (e) { }
+      } catch (e) {}
       return setIsLoading(false);
     };
 
@@ -34,4 +68,4 @@ export const useResults = (endpoint, params) => {
   }, [params]);
 
   return [isLoading, results, count];
-}; 
+};
