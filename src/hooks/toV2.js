@@ -14,10 +14,10 @@ export const mangaToV2 = async ({
 }) => {
   const author = relationships
     .filter(({ type }) => type === 'author')
-    .map(({ name }) => name);
+    .map(({ attributes: { name } }) => name);
   const artist = relationships
     .filter(({ type }) => type === 'artist')
-    .map(({ name }) => name);
+    .map(({ attributes: { name } }) => name);
   const {
     attributes: { fileName },
   } = relationships.find(({ type }) => type === 'cover_art');
