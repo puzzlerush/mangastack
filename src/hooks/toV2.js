@@ -9,8 +9,8 @@ export const mangaToV2 = async ({
       title: { en: title },
       description: { en: description },
     },
+    relationships,
   },
-  relationships,
 }) => {
   const author = relationships
     .filter(({ type }) => type === 'author')
@@ -37,17 +37,15 @@ export const mangaToV2 = async ({
 export const chaptersToV2 = (chapters, mangaId) => {
   return chapters.map(
     ({
-      data: {
-        id,
-        attributes: {
-          chapter,
-          title,
-          translatedLanguage: language,
-          hash,
-          data,
-          dataSaver,
-          createdAt,
-        },
+      id,
+      attributes: {
+        chapter,
+        title,
+        translatedLanguage: language,
+        hash,
+        data,
+        dataSaver,
+        createdAt,
       },
       relationships,
     }) => {

@@ -87,7 +87,7 @@ export const useChapters = (id, language, limit, offset) => {
       let offset = 0;
       const response = await getFeed(limit, offset);
       let allChapters = [];
-      allChapters = allChapters.concat(response.data.results);
+      allChapters = allChapters.concat(response.data.data);
 
       for (
         let i = 0;
@@ -96,7 +96,7 @@ export const useChapters = (id, language, limit, offset) => {
       ) {
         offset += limit;
         const nextFeedResponse = await getFeed(limit, offset);
-        allChapters = allChapters.concat(nextFeedResponse.data.results);
+        allChapters = allChapters.concat(nextFeedResponse.data.data);
       }
 
       const chaptersWithGroupNames = chaptersToV2(allChapters, id);
