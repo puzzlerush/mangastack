@@ -37,8 +37,8 @@ export const useResults = (endpoint, params) => {
               return qs.stringify(params);
             },
           });
-          const mangaCovers = mangadexResponse.data.results.map(
-            ({ data: { id }, relationships }) => ({
+          const mangaCovers = mangadexResponse.data.data.map(
+            ({ id, relationships }) => ({
               ...relationships.find(({ type }) => type === 'cover_art'),
               mangaId: id,
             })
