@@ -36,7 +36,12 @@ import {
   ViewModule as ViewModuleIcon,
 } from '@material-ui/icons';
 import { fade, makeStyles } from '@material-ui/core/styles';
-import { setTheme, setNSFW, setLanguage } from '../actions/settings';
+import {
+  setTheme,
+  setNSFW,
+  setLanguage,
+  setUseLowResolution,
+} from '../actions/settings';
 import { deleteAll } from '../actions/mangaList';
 import languageOptions from '../assets/languageOptions';
 
@@ -101,6 +106,8 @@ const Header = ({
   setNSFW,
   language,
   setLanguage,
+  useLowResolution,
+  setUseLowResolution,
   deleteAllMangaListEntries,
 }) => {
   const classes = useStyles();
@@ -280,6 +287,18 @@ const Header = ({
                 label="Include NSFW results"
               />
             </ListItem>
+            <ListItem>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={useLowResolution}
+                    onChange={() => setUseLowResolution(!useLowResolution)}
+                    name="use-low-resolution-checkbox"
+                  />
+                }
+                label="Data Saver"
+              />
+            </ListItem>
           </List>
         </Box>
         <Divider />
@@ -335,12 +354,15 @@ const mapStateToProps = (state) => ({
   theme: state.settings.theme,
   nsfw: state.settings.nsfw,
   language: state.settings.language,
+  useLowResolution: state.settings.useLowResolution,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   setTheme: (theme) => dispatch(setTheme(theme)),
   setNSFW: (nsfw) => dispatch(setNSFW(nsfw)),
   setLanguage: (language) => dispatch(setLanguage(language)),
+  setUseLowResolution: (useLowResolution) =>
+    dispatch(setUseLowResolution(useLowResolution)),
   deleteAllMangaListEntries: () => dispatch(deleteAll()),
 });
 

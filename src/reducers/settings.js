@@ -2,6 +2,7 @@ const defaultSettingsState = {
   theme: 'light',
   language: 'en',
   nsfw: false,
+  useLowResolution: false,
 };
 
 const settingsReducer = (state = defaultSettingsState, action) => {
@@ -12,6 +13,8 @@ const settingsReducer = (state = defaultSettingsState, action) => {
       return { ...state, language: action.language };
     case 'SET_NSFW':
       return { ...state, nsfw: action.nsfw };
+    case 'SET_USE_LOW_RESOLUTION':
+      return { ...state, useLowResolution: action.useLowResolution };
     default:
       return state;
   }

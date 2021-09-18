@@ -25,7 +25,7 @@ import { setReading } from '../actions/mangaList';
 import { htmlDecode, generateMetaKeywordsTitle } from '../utils/utils';
 import languageOptions from '../assets/languageOptions';
 
-const ReadChapterPage = ({ language, setReading }) => {
+const ReadChapterPage = ({ language, useLowResolution, setReading }) => {
   const { mangaId, chapterId } = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -88,13 +88,28 @@ const ReadChapterPage = ({ language, setReading }) => {
       const {
         data: {
           data: {
-            attributes: { hash, data, dataSaver: pages },
+            attributes: { hash, data, dataSaver },
           },
         },
       } = chapterResponse;
 
+      const imageResConfig = {
+        lowRes: {
+          pages: dataSaver,
+          urlPath: 'data-saver',
+        },
+        highRes: {
+          pages: data,
+          urlPath: 'data',
+        },
+      };
+
+      const { pages, urlPath } = imageResConfig[
+        useLowResolution ? 'lowRes' : 'highRes'
+      ];
+
       const pageURLs = pages.map(
-        (page) => `${baseUrl}/data-saver/${hash}/${page}`
+        (page) => `${baseUrl}/${urlPath}/${hash}/${page}`
       );
       return pageURLs;
     };
@@ -123,7 +138,7 @@ const ReadChapterPage = ({ language, setReading }) => {
     if (!mangaLoading && !chaptersLoading) {
       fetchData();
     }
-  }, [chapterId, mangaLoading, chaptersLoading]);
+  }, [chapterId, mangaLoading, chaptersLoading, useLowResolution]);
 
   const imagesLoading = !(
     chapterPages.length > 0 && imagesLoaded >= chapterPages.length
@@ -313,6 +328,7 @@ ReadChapterPage.defaultProps = {
 
 const mapStateToProps = (state) => ({
   language: state.settings.language,
+  useLowResolution: state.settings.useLowResolution,
 });
 
 const mapDispatchToProps = (dispatch) => ({
