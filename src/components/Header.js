@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory, useLocation, Link } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -34,6 +34,7 @@ import {
   Home as HomeIcon,
   Book as BookIcon,
   ViewModule as ViewModuleIcon,
+  ArrowBack as ArrowBackIcon,
 } from '@material-ui/icons';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import {
@@ -57,8 +58,8 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 10,
     paddingBottom: 10,
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
+  backButton: {
+    marginRight: theme.spacing(1),
   },
   sidebarList: {
     width: 250,
@@ -115,7 +116,24 @@ const Header = ({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [languageSelectInput, setLanguageSelectInput] = useState(language);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [historyPushes, setHistoryPushes] = useState([]);
   let history = useHistory();
+  let location = useLocation();
+
+  const firstUpdate = useRef(true);
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
+    if (history.action == 'PUSH') {
+      setHistoryPushes([...historyPushes, history.location.pathname]);
+    } else if (history.action == 'POP') {
+      setHistoryPushes(historyPushes.slice(0, historyPushes.length-1));
+    }
+
+  }, [location]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -170,15 +188,17 @@ const Header = ({
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar className={classes.toolBar}>
+          {historyPushes.length > 0 && (
           <IconButton
             color="inherit"
-            aria-label="open drawer"
+            aria-label="go back"
             edge="start"
-            onClick={() => setSidebarOpen(true)}
-            className={classes.menuButton}
+            className={classes.backButton}
+              onClick={() => history.goBack()}
           >
-            <MenuIcon />
+            <ArrowBackIcon />
           </IconButton>
+          )}
           <Box
             component="span"
             display={{ xs: 'none', sm: 'block' }}
@@ -217,10 +237,18 @@ const Header = ({
               />
             </form>
           </div>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="end"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <MenuIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
-        anchor="left"
+        anchor="right"
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
       >
