@@ -77,13 +77,8 @@ const ReadChapterPage = ({ language, useLowResolution, setReading }) => {
     };
 
     const fetchChapterPageURLs = async () => {
-      const mdhRequest = axios.get(`/api/at-home/server/${chapterId}`);
-      const chapterRequest = axios.get(`/api/chapter/${chapterId}`);
+      const mdhResponse = await axios.get(`/api/at-home/server/${chapterId}`);
 
-      const [mdhResponse, chapterResponse] = await Promise.all([
-        mdhRequest,
-        chapterRequest,
-      ]);
       const {
         baseUrl,
         chapter: { hash, data, dataSaver },
