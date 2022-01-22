@@ -84,14 +84,10 @@ const ReadChapterPage = ({ language, useLowResolution, setReading }) => {
         mdhRequest,
         chapterRequest,
       ]);
-      const { baseUrl } = mdhResponse.data;
       const {
-        data: {
-          data: {
-            attributes: { hash, data, dataSaver },
-          },
-        },
-      } = chapterResponse;
+        baseUrl,
+        chapter: { hash, data, dataSaver },
+      } = mdhResponse.data;
 
       const imageResConfig = {
         lowRes: {
