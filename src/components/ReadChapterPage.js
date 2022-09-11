@@ -106,11 +106,14 @@ const ReadChapterPage = ({ language, useLowResolution, setReading }) => {
     };
 
     const fetchPages = async () => {
-      const pageURLs = await fetchChapterPageURLs();
-      setChapterPages(pageURLs);
+      const response = await axios.get(`/mdh/${chapterId}`, {
+        params: { lowRes: useLowResolution },
+      });
+      const imageBuffers = response.data;
+      setChapterPages(imageBuffers);
       setImagesLoaded(0);
       setTimeout(() => {
-        setImagesLoaded(pageURLs.length);
+        setImagesLoaded(imageBuffers.length);
       }, 10000);
     };
 
@@ -142,7 +145,7 @@ const ReadChapterPage = ({ language, useLowResolution, setReading }) => {
           width: '100%',
           display: imagesLoading ? 'none' : 'block',
         }}
-        src={chapterPage}
+        src={`data:image/jpg;base64, ${chapterPage}`}
         alt={`Error loading page ${index + 1}`}
         onLoad={() => setImagesLoaded(imagesLoaded + 1)}
       />
