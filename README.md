@@ -1,9 +1,9 @@
 <p align="center">
-  <a href="https://mangastack.cf/">
+  <a href="https://mangastack.netlify.app/">
     <img src="./screenshots/home-dark-desktop.png" alt="MangaStack Home Page">
   </a>
 </p>
-<p align="center"><b>https://mangastack.cf/</b></p>
+<p align="center"><b><del>https://mangastack.cf/</del>https://mangastack.netlify.app/</b></p>
 
 ## About
 
