@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import qs from 'qs';
 import { usePrevious } from './common';
 import axios from '../config/axios';
+import { getProxyImageUrl } from '../utils/utils';
 
 export const shallowIsEqual = (a, b) => {
   for (const key in { ...a, ...b }) {
@@ -45,9 +46,9 @@ export const useResults = (endpoint, params) => {
           );
 
           mangaCovers.forEach(({ mangaId, attributes: { fileName } }) => {
-            coverMap[
-              mangaId
-            ] = `https://uploads.mangadex.org/covers/${mangaId}/${fileName}.512.jpg`;
+            coverMap[mangaId] = getProxyImageUrl(
+              `https://uploads.mangadex.org/covers/${mangaId}/${fileName}.512.jpg`
+            );
           });
         } catch (e) {}
 

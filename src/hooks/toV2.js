@@ -1,6 +1,7 @@
 import qs from 'qs';
 import axios from '../config/axios';
 import { htmlDecode } from '../utils/utils';
+import { getProxyImageUrl } from '../utils/utils';
 
 export const mangaToV2 = async ({
   data: {
@@ -21,7 +22,9 @@ export const mangaToV2 = async ({
   const {
     attributes: { fileName },
   } = relationships.find(({ type }) => type === 'cover_art');
-  const mainCover = `https://uploads.mangadex.org/covers/${id}/${fileName}`;
+  const mainCover = getProxyImageUrl(
+    `https://uploads.mangadex.org/covers/${id}/${fileName}`
+  );
   return {
     id,
     title: htmlDecode(title),

@@ -22,7 +22,11 @@ import {
   useChapters,
 } from '../hooks/mangadex-api';
 import { setReading } from '../actions/mangaList';
-import { htmlDecode, generateMetaKeywordsTitle } from '../utils/utils';
+import {
+  htmlDecode,
+  generateMetaKeywordsTitle,
+  getProxyImageUrl,
+} from '../utils/utils';
 import languageOptions from '../assets/languageOptions';
 
 const ReadChapterPage = ({ language, useLowResolution, setReading }) => {
@@ -99,8 +103,8 @@ const ReadChapterPage = ({ language, useLowResolution, setReading }) => {
         useLowResolution ? 'lowRes' : 'highRes'
       ];
 
-      const pageURLs = pages.map(
-        (page) => `${baseUrl}/${urlPath}/${hash}/${page}`
+      const pageURLs = pages.map((page) =>
+        getProxyImageUrl(`${baseUrl}/${urlPath}/${hash}/${page}`)
       );
       return pageURLs;
     };

@@ -24,7 +24,10 @@ export const generateMetaKeywordsTitle = (title) => {
     `${title} chapters`,
     `${title} scans`,
     `${title} kissmanga`,
-    `${title} mangadex`
+    `${title} mangadex`,
   ];
   return keywords.join(', ');
 };
+
+export const getProxyImageUrl = (imageUrl) =>
+  `/image/${encodeURIComponent(imageUrl)}`;
