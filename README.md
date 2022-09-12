@@ -3,7 +3,7 @@
     <img src="./screenshots/home-dark-desktop.png" alt="MangaStack Home Page">
   </a>
 </p>
-<p align="center"><b><del>https://mangastack.cf/</del>https://mangastack.netlify.app/</b></p>
+<p align="center"><b>https://mangastack.netlify.app/</b></p>
 
 ## About
 
