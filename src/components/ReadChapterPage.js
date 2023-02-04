@@ -103,8 +103,8 @@ const ReadChapterPage = ({ language, useLowResolution, setReading }) => {
         useLowResolution ? 'lowRes' : 'highRes'
       ];
 
-      const pageURLs = pages.map((page) =>
-        getProxyImageUrl(`${baseUrl}/${urlPath}/${hash}/${page}`)
+      const pageURLs = pages.map(
+        (page) => `${baseUrl}/${urlPath}/${hash}/${page}`
       );
       return pageURLs;
     };
