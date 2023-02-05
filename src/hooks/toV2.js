@@ -22,9 +22,8 @@ export const mangaToV2 = async ({
   const {
     attributes: { fileName },
   } = relationships.find(({ type }) => type === 'cover_art');
-  const mainCover = getProxyImageUrl(
-    `https://uploads.mangadex.org/covers/${id}/${fileName}`
-  );
+  const mainCover = `https://uploads.mangadex.org/covers/${id}/${fileName}`;
+
   return {
     id,
     title: htmlDecode(title),

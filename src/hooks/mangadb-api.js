@@ -46,9 +46,9 @@ export const useResults = (endpoint, params) => {
           );
 
           mangaCovers.forEach(({ mangaId, attributes: { fileName } }) => {
-            coverMap[mangaId] = getProxyImageUrl(
-              `https://uploads.mangadex.org/covers/${mangaId}/${fileName}.512.jpg`
-            );
+            coverMap[
+              mangaId
+            ] = `https://uploads.mangadex.org/covers/${mangaId}/${fileName}.512.jpg`;
           });
         } catch (e) {}
 
