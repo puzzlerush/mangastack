@@ -42,7 +42,7 @@ const ReadChapterPage = ({ language, useLowResolution, setReading }) => {
     isLoading: mangaLoading,
     error: mangaError,
     mangaInfo,
-  } = useMangaData(mangaId);
+  } = useMangaData(mangaId, language);
   const {
     isLoading: chaptersLoading,
     error: chaptersError,
@@ -111,11 +111,11 @@ const ReadChapterPage = ({ language, useLowResolution, setReading }) => {
 
     const fetchPages = async () => {
       const pageURLs = await fetchChapterPageURLs();
+      if (pageURLs.length === 0) {
+        throw new Error('external');
+      }
       setChapterPages(pageURLs);
       setImagesLoaded(0);
-      setTimeout(() => {
-        setImagesLoaded(pageURLs.length);
-      }, 10000);
     };
 
     const fetchData = async () => {
@@ -125,7 +125,9 @@ const ReadChapterPage = ({ language, useLowResolution, setReading }) => {
         await fetchPages();
       } catch (e) {
         setError(
-          `An error occured while fetching the chapter data.\nPlease make sure the IDs in the URL point to valid resources.`
+          e.message === 'external'
+            ? 'This chapter is hosted externally and cannot be read here.'
+            : `An error occured while fetching the chapter data.\nPlease make sure the IDs in the URL point to valid resources.`
         );
       }
       setIsLoading(false);
@@ -148,7 +150,7 @@ const ReadChapterPage = ({ language, useLowResolution, setReading }) => {
         }}
         src={chapterPage}
         alt={`Error loading page ${index + 1}`}
-        onLoad={() => setImagesLoaded(imagesLoaded + 1)}
+        onLoad={() => setImagesLoaded((prev) => prev + 1)}
       />
     </ListItem>
   ));

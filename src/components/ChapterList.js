@@ -75,8 +75,11 @@ const ChapterList = ({ chapters, selectedChapter }) => {
     <ListItem
       key={chapter.id}
       button
-      component={Link}
-      to={`/manga/${chapter.mangaId}/chapter/${chapter.id}`}
+      component={chapter.externalUrl ? 'a' : Link}
+      href={chapter.externalUrl || undefined}
+      to={chapter.externalUrl ? undefined : `/manga/${chapter.mangaId}/chapter/${chapter.id}`}
+      target={chapter.externalUrl ? '_blank' : undefined}
+      rel={chapter.externalUrl ? 'noopener noreferrer' : undefined}
       selected={selectedChapter === chapter.id}
     >
       <ListItemText

@@ -3,26 +3,27 @@ import axios from '../config/axios';
 import { htmlDecode } from '../utils/utils';
 import { getProxyImageUrl } from '../utils/utils';
 
-export const mangaToV2 = async ({
-  data: {
-    id,
-    attributes: {
-      title: { en: title },
-      description: { en: description },
+export const mangaToV2 = async (
+  {
+    data: {
+      id,
+      attributes: { title: titleObj, description: descObj },
+      relationships,
     },
-    relationships,
   },
-}) => {
+  language = 'en'
+) => {
+  const title = titleObj[language] ?? titleObj['en'] ?? Object.values(titleObj)[0] ?? '';
+  const description = descObj[language] ?? descObj['en'] ?? Object.values(descObj)[0] ?? '';
   const author = relationships
     .filter(({ type }) => type === 'author')
     .map(({ attributes: { name } }) => name);
   const artist = relationships
     .filter(({ type }) => type === 'artist')
     .map(({ attributes: { name } }) => name);
-  const {
-    attributes: { fileName },
-  } = relationships.find(({ type }) => type === 'cover_art');
-  const mainCover = `https://uploads.mangadex.org/covers/${id}/${fileName}`;
+  const coverArtRel = relationships.find(({ type }) => type === 'cover_art');
+  const fileName = coverArtRel?.attributes?.fileName;
+  const mainCover = fileName ? `https://uploads.mangadex.org/covers/${id}/${fileName}` : '';
 
   return {
     id,
@@ -47,6 +48,7 @@ export const chaptersToV2 = (chapters, mangaId) => {
         hash,
         data,
         dataSaver,
+        externalUrl,
         createdAt,
       },
       relationships,
@@ -63,10 +65,11 @@ export const chaptersToV2 = (chapters, mangaId) => {
         hash,
         data,
         dataSaver,
+        externalUrl,
         id,
         mangaId,
         chapter,
-        title: htmlDecode(title),
+        title: title ? htmlDecode(title) : '',
         timestamp,
         groups: groupsMap,
       };

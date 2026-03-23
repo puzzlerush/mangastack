@@ -31,3 +31,8 @@ export const generateMetaKeywordsTitle = (title) => {
 
 export const getProxyImageUrl = (imageUrl) =>
   `/image/${encodeURIComponent(imageUrl)}`;
+
+export const getContentRating = (nsfw) =>
+  nsfw
+    ? ['safe', 'suggestive', 'erotica', 'pornographic']
+    : ['safe', 'suggestive'];

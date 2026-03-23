@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const MangaTile = ({ id, title, artist, author, description, rating, views, mainCover }) => {
+const MangaTile = ({ id, title, artist, author, description, rating, mainCover }) => {
   const classes = useStyles();
   return (
     <Card className={classes.root} elevation={10}>
@@ -76,9 +76,6 @@ const MangaTile = ({ id, title, artist, author, description, rating, views, main
             </Typography>
           </Link>
           <Rating value={rating.bayesian / 2} precision={0.5} readOnly />
-          <Typography>
-            {views.toLocaleString()} views
-              </Typography>
           <Typography variant="subtitle1" color="textSecondary">
             {getShortAuthors(author, artist)}
           </Typography>

@@ -19,7 +19,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Helmet } from 'react-helmet';
 import Loader from './Loader';
 import ChapterList from './ChapterList';
-import { useMangaData, useChapters } from '../hooks/mangadex-api';
+import { useMangaData, useChapters, useMangaStatistics } from '../hooks/mangadex-api';
 import { htmlDecode, generateMetaKeywordsTitle } from '../utils/utils';
 import languageOptions from '../assets/languageOptions';
 
@@ -59,12 +59,13 @@ const MangaPage = ({ language, userMangaList }) => {
     isLoading: mangaLoading,
     error: mangaError,
     mangaInfo,
-  } = useMangaData(id);
+  } = useMangaData(id, language);
   const {
     isLoading: chaptersLoading,
     error: chaptersError,
     chapters,
   } = useChapters(id, language, 500, 0);
+  const { rating } = useMangaStatistics(id);
 
   const isLoading = mangaLoading || chaptersLoading;
   const error = mangaError || chaptersError;
@@ -109,18 +110,7 @@ const MangaPage = ({ language, userMangaList }) => {
               <div className={classes.details}>
                 <CardContent className={classes.content}>
                   <Typography variant="h5">{mangaInfo.title}</Typography>
-                  <div
-                    style={{ display: 'flex', justifyContent: 'space-between' }}
-                  >
-                    <Rating
-                      value={mangaInfo.rating.bayesian / 2}
-                      precision={0.5}
-                      readOnly
-                    />
-                    <Typography style={{ display: 'inline' }}>
-                      {mangaInfo.views.toLocaleString()} views
-                    </Typography>
-                  </div>
+                  <Rating value={rating / 2} precision={0.5} readOnly />
                   <Divider />
                   <br />
                   <Typography variant="subtitle1">

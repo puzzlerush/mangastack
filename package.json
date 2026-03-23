@@ -25,10 +25,10 @@
     "web-vitals": "^1.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "netlify-dev": "./node_modules/.bin/netlify dev",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
+    "netlify-dev": "NODE_OPTIONS=--openssl-legacy-provider ./node_modules/.bin/netlify dev",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
+    "test": "NODE_OPTIONS=--openssl-legacy-provider react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -52,5 +52,10 @@
   "devDependencies": {
     "netlify-cli": "^3.10.11",
     "prettier": "2.2.1"
+  },
+  "overrides": {
+    "postcss-safe-parser": {
+      "postcss": "^8.4.31"
+    }
   }
 }

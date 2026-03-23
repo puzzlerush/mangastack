@@ -4,22 +4,29 @@ import { Typography } from '@material-ui/core';
 import { Helmet } from 'react-helmet';
 import Loader from './Loader';
 import MangaGrid from './MangaGrid';
-import { useResults } from '../hooks/mangadb-api';
+import { useMangaList } from '../hooks/mangadex-api';
+import { getContentRating } from '../utils/utils';
 
-const SearchPage = ({ nsfw }) => {
+const SearchPage = ({ nsfw, language }) => {
   const query = new URLSearchParams(useLocation().search);
   const searchQuery = query.get('q');
   const page = parseInt(query.get('page')) || 1;
   const perPage = 12;
 
-  const [isLoading, results, count] = useResults('/mangadb/search', {
-    q: searchQuery,
-    nsfw,
-    limit: perPage,
-    skip: (page - 1) * perPage
-  });
+  const contentRating = getContentRating(nsfw);
 
-  const totalPages = Math.ceil(count / perPage);
+  const { isLoading, mangaList, total } = useMangaList(
+    { relevance: 'desc' },
+    language,
+    {
+      limit: perPage,
+      offset: (page - 1) * perPage,
+      contentRating,
+      title: searchQuery,
+    }
+  );
+
+  const totalPages = Math.ceil(total / perPage);
   const pageNavURL = `/search?q=${searchQuery}&page=`;
 
   if (isLoading) {
@@ -29,13 +36,13 @@ const SearchPage = ({ nsfw }) => {
   } else {
     return (
       <div>
-        {results.length > 0 ? (
+        {mangaList.length > 0 ? (
           <>
             <Helmet>
               <title>Search - MangaStack</title>
               <meta
                 name="keywords"
-                content={results.map((result) => result.title).join(', ')}
+                content={mangaList.map((manga) => manga.title).join(', ')}
               />
             </Helmet>
             <Typography align="center">
@@ -45,21 +52,22 @@ const SearchPage = ({ nsfw }) => {
               pageNavURL={pageNavURL}
               page={page}
               totalPages={totalPages}
-              mangaList={results}
+              mangaList={mangaList}
             />
           </>
         ) : (
-            <Typography align="center">
-              {searchQuery ? 'There are no results for the search.' : 'No query, no results.'}
-            </Typography>
-          )}
+          <Typography align="center">
+            {searchQuery ? 'There are no results for the search.' : 'No query, no results.'}
+          </Typography>
+        )}
       </div>
     );
   }
 };
 
 const mapStateToProps = (state) => ({
-  nsfw: state.settings.nsfw
+  nsfw: state.settings.nsfw,
+  language: state.settings.language,
 });
 
 export default connect(mapStateToProps)(SearchPage);
