@@ -23,7 +23,7 @@ export const mangaToV2 = async (
     .map(({ attributes: { name } }) => name);
   const coverArtRel = relationships.find(({ type }) => type === 'cover_art');
   const fileName = coverArtRel?.attributes?.fileName;
-  const mainCover = fileName ? `https://uploads.mangadex.org/covers/${id}/${fileName}` : '';
+  const mainCover = fileName ? `/image/covers/${id}/${fileName}` : '';
 
   return {
     id,
