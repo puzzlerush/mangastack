@@ -1,7 +1,7 @@
 const https = require('https');
 
 exports.handler = async (event) => {
-  const splat = event.queryStringParameters?.splat || '';
+  const splat = decodeURIComponent(event.queryStringParameters?.splat || '');
   const url = `https://uploads.mangadex.org/${splat}`;
 
   return new Promise((resolve) => {
