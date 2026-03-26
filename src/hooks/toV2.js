@@ -1,7 +1,4 @@
-import qs from 'qs';
-import axios from '../config/axios';
 import { htmlDecode } from '../utils/utils';
-import { getProxyImageUrl } from '../utils/utils';
 
 export const mangaToV2 = async (
   {

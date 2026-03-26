@@ -1,3 +1,7 @@
+[[edge_functions]]
+  path = "/image/*"
+  function = "cover"
+
 # example netlify.toml
 [build]
   command = "npm run build"
@@ -5,14 +9,14 @@
   publish = "build"
 
   [[redirects]]
-    from = "/api/*"
-    to = "https://api.mangadex.org/:splat"
+    from = "/image/*"
+    to = "/.netlify/functions/cover?splat=:splat"
     status = 200
     force = true
 
   [[redirects]]
-    from = "/image/*"
-    to = "/.netlify/functions/cover?splat=:splat"
+    from = "/api/*"
+    to = "https://api.mangadex.org/:splat"
     status = 200
     force = true
 
